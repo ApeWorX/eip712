@@ -58,7 +58,13 @@ setup(
     author_email="admin@apeworx.io",
     url="https://github.com/ApeWorX/eip712",
     include_package_data=True,
-    install_requires=[],  # NOTE: Add 3rd party libraries here
+    install_requires=[
+        "dataclassy>=0.7.2,<0.8.0",
+        "eth-utils>=1.3.0,<2",
+        "eth-abi>=2.0.0b7,<3",
+        "eth-account>=0.5.2,<0.6.0",
+        "eth-typing>=2.2,<3.0",
+    ],  # NOTE: Add 3rd party libraries here
     python_requires=">=3.6,<4",
     extras_require=extras_require,
     py_modules=["eip712"],
