@@ -1,6 +1,6 @@
-# <PROJECT_NAME>
+# eip712
 
-TODO: Description
+Message classes for typed structured data hashing and signing in Ethereum. See [EIP-712](https://eips.ethereum.org/EIPS/eip-712) for details.
 
 ## Dependencies
 
@@ -13,7 +13,7 @@ TODO: Description
 You can install the latest release via [`pip`](https://pypi.org/project/pip/):
 
 ```bash
-pip install <PYPI_NAME>
+pip install eip712
 ```
 
 ### via `setuptools`
@@ -21,8 +21,8 @@ pip install <PYPI_NAME>
 You can clone the repository and use [`setuptools`](https://github.com/pypa/setuptools) for the most up-to-date version:
 
 ```bash
-git clone https://github.com/ApeWorX/<PYPI_NAME>.git
-cd <PYPI_NAME>
+git clone https://github.com/ApeWorX/eip712.git
+cd eip712
 python3 setup.py install
 ```
 

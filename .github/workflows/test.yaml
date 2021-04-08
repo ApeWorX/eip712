@@ -21,10 +21,10 @@ jobs:
           run: black --check .
 
         - name: Run flake8
-          run: flake8 ./<MODULE_NAME> ./tests ./setup.py
+          run: flake8 ./eip712 ./tests ./setup.py
 
         - name: Run isort
-          run: isort --check-only --diff ./<MODULE_NAME> ./tests
+          run: isort --check-only --diff ./eip712 ./tests
     
     type-check:
         runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
           run: pip install .[lint]
 
         - name: Run MyPy
-          run: mypy -p <MODULE_NAME>
+          run: mypy -p eip712
 
     functional:
         runs-on: ubuntu-latest

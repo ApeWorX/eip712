@@ -4,8 +4,8 @@ To get started with working on the codebase, use the following steps prepare you
 
 ```bash
 # clone the github repo and navigate into the folder
-git clone https://github.com/ApeWorX/<PROJECT_NAME>.git
-cd <PROJECT_NAME>
+git clone https://github.com/ApeWorX/eip712.git
+cd eip712
 
 # create and load a virtual environment
 python3 -m venv venv
