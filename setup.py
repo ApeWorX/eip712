@@ -64,6 +64,7 @@ setup(
         "eth-abi>=2.0.0b7,<3",
         "eth-account>=0.5.2,<0.6.0",
         "eth-typing>=2.2,<3.0",
+        "importlib-metadata ; python_version<'3.8'",
     ],  # NOTE: Add 3rd party libraries here
     python_requires=">=3.6,<4",
     extras_require=extras_require,
