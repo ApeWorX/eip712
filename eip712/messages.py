@@ -2,13 +2,20 @@ from typing import Dict
 
 from dataclassy import as_dict, dataclass, fields
 from eth_abi import is_encodable_type
-from eth_account._utils.structured_data.hashing import hash_domain
 from eth_utils.curried import ValidationError
 
-from eth_account._utils.structured_data.hashing import (  # isort:skip
-    hash_message as hash_eip712_message,  # isort:skip
-)  # isort:skip
+# isort: off
+# We need isort off for these two imports because black makes a conflicting change.
+from eth_account._utils.structured_data.hashing import hash_domain  # type:ignore
+from eth_account._utils.structured_data.hashing import (
+    hash_message as hash_eip712_message,
+)
 
+
+# TODO: replace this with
+# eth_account._utils.structured_data.validation.EIP712_DOMAIN_FIELDS when
+# eth-account >0.5.4 is released with this change:
+# https://github.com/ethereum/eth-account/pull/112
 EIP712_DOMAIN_FIELDS = [
     "name",
     "version",
@@ -45,7 +52,7 @@ class EIP712Type:
         types: Dict[str, list] = {}
         types[self.type] = []
 
-        for field in fields(self):
+        for field in fields(self.__class__):
             value = getattr(self, field)
             if isinstance(value, EIP712Type):
                 types[self.type].append({"name": field, "type": value.type})
@@ -75,7 +82,7 @@ class EIP712Message(EIP712Type):
         header_fields = [f"_{field}_" for field in EIP712_DOMAIN_FIELDS]
         return {
             field.replace("_", ""): getattr(self, field)
-            for field in fields(self, internals=True)
+            for field in fields(self.__class__, internals=True)
             if field in header_fields
         }
 
