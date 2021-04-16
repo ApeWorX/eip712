@@ -62,7 +62,6 @@ setup(
         "dataclassy>=0.7.2,<0.8.0",
         "eth-utils>=1.3.0,<2",
         "eth-abi>=2.0.0b7,<3",
-        "eth-account>=0.5.2,<0.6.0",
         "eth-typing>=2.2,<3.0",
         "importlib-metadata ; python_version<'3.8'",
     ],  # NOTE: Add 3rd party libraries here

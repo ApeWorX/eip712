@@ -6,16 +6,11 @@ from eth_utils.curried import ValidationError
 
 # isort: off
 # We need isort off for these two imports because black makes a conflicting change.
-from eth_account._utils.structured_data.hashing import hash_domain  # type:ignore
-from eth_account._utils.structured_data.hashing import (
+from .hashing import hash_domain  # type:ignore
+from .hashing import (
     hash_message as hash_eip712_message,
 )
 
-
-# TODO: replace this with
-# eth_account._utils.structured_data.validation.EIP712_DOMAIN_FIELDS when
-# eth-account >0.5.4 is released with this change:
-# https://github.com/ethereum/eth-account/pull/112
 EIP712_DOMAIN_FIELDS = [
     "name",
     "version",
