@@ -38,4 +38,4 @@ Comments, questions, criticisms and pull requests are welcomed.
 
 ## License
 
-This project is licensed under the [Apache 2.0](LICENSE).
+This project is licensed under the [Apache 2.0 license](https://github.com/ApeWorX/eip712/blob/main/LICENSE).

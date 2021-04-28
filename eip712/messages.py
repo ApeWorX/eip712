@@ -17,6 +17,7 @@ EIP712_DOMAIN_FIELDS = [
     "chainId",
     "verifyingContract",
 ]
+HEADER_FIELDS = set(f"_{field}_" for field in EIP712_DOMAIN_FIELDS)
 
 
 @dataclass(iter=True, slots=True)
@@ -59,7 +60,8 @@ class EIP712Type:
 
     @property
     def data(self) -> dict:
-        return as_dict(self)  # NOTE: Handles recursion
+        d = as_dict(self)  # NOTE: Handles recursion
+        return {k: v for (k, v) in d.items() if k not in HEADER_FIELDS}
 
 
 # TODO: Make type of EIP712Message a subtype of SignableMessage somehow
@@ -74,11 +76,10 @@ class EIP712Message(EIP712Type):
 
     @property
     def domain(self) -> dict:
-        header_fields = [f"_{field}_" for field in EIP712_DOMAIN_FIELDS]
         return {
             field.replace("_", ""): getattr(self, field)
             for field in fields(self.__class__, internals=True)
-            if field in header_fields
+            if field in HEADER_FIELDS
         }
 
     @property
@@ -101,10 +102,16 @@ class EIP712Message(EIP712Type):
         )
 
     @property
-    def body(self) -> bytes:
+    def body_data(self) -> dict:
+        types = dict(self.types(), EIP712Domain=self.domain_type)
         msg = {
-            "types": self.types(),
+            "domain": self.domain,
+            "types": types,
             "primaryType": self.type,
             "message": self.data,
         }
-        return hash_eip712_message(msg)
+        return msg
+
+    @property
+    def body(self) -> bytes:
+        return hash_eip712_message(self.body_data)
