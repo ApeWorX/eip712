@@ -2,27 +2,37 @@
 # annotations (the types aren't defined anywhere).
 # flake8: noqa
 
-from eip712.messages import EIP712Message, EIP712Type
+import pytest
+
+from eip712.messages import EIP712Message, EIP712Type, ValidationError
 
 
 class SubType(EIP712Type):
     inner: "uint256"  # type: ignore
 
 
-class ValidMsgDef(EIP712Message):
-    _name_: "string" = "Name"  # type: ignore
-
+class ValidMessageWithNameDomainField(EIP712Message):
+    _name_: "string" = "Valid Test Message"  # type: ignore
     value: "uint256"  # type: ignore
     default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore
     sub: SubType
 
 
+class InvalidMessageMissingDomainFields(EIP712Message):
+    value: "uint256"  # type: ignore
+
+
 def test_multilevel_message():
-    msg = ValidMsgDef(value=1, sub=SubType(inner=2))
+    msg = ValidMessageWithNameDomainField(value=1, sub=SubType(inner=2))
 
     assert msg.version.hex() == "01"
-    assert msg.header.hex() == "ae5d5ac778a755034e549ed137af5f5bf0aacf767321bb6127ec8a1e8c68714b"
-    assert msg.body.hex() == "bbc572c6c3273deb6d95ffae1b79c35452b4996b81aa243b17eced03c0b01c54"
+    assert msg.header.hex() == "336a9d2b32d1ab7ea7bbbd2565eca1910e54b74843858dec7a81f772a3c17e17"
+    assert msg.body.hex() == "306af87567fa87e55d2bd925d9a3ed2b1ec2c3e71b142785c053dc60b6ca177b"
+
+
+def test_invalid_message_without_domain_fields():
+    with pytest.raises(ValidationError):
+        msg = InvalidMessageMissingDomainFields(value=1)
 
 
 def test_yearn_vaults_message():

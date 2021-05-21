@@ -66,7 +66,7 @@ class EIP712Type:
 
 # TODO: Make type of EIP712Message a subtype of SignableMessage somehow
 class EIP712Message(EIP712Type):
-    def __init__(self):
+    def __post_init__(self):
         # At least one of the header fields must be in the EIP712 message header
         if len(self.domain) == 0:
             raise ValidationError(

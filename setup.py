@@ -59,7 +59,7 @@ setup(
     url="https://github.com/ApeWorX/eip712",
     include_package_data=True,
     install_requires=[
-        "dataclassy>=0.7.2,<0.8.0",
+        "dataclassy>=0.8.2,<1.0",
         "eth-utils>=1.3.0,<2",
         "eth-abi>=2.0.0b7,<3",
         "eth-typing>=2.2,<3.0",
