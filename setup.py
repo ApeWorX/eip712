@@ -63,6 +63,7 @@ setup(
         "eth-utils>=1.3.0,<2",
         "eth-abi>=2.0.0b7,<3",
         "eth-typing>=2.2,<3.0",
+        "hexbytes<0.3.0",
         "pycryptodome>=3.4.7,<4.0.0",
         "importlib-metadata ; python_version<'3.8'",
     ],  # NOTE: Add 3rd party libraries here
