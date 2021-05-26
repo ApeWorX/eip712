@@ -1,25 +1,21 @@
-# This is needed otherwise "string", "uint256" get marked as failing type
-# annotations (the types aren't defined anywhere).
-# flake8: noqa
-
 import pytest
 
 from eip712.messages import EIP712Message, EIP712Type, ValidationError
 
 
 class SubType(EIP712Type):
-    inner: "uint256"  # type: ignore
+    inner: "uint256"  # type: ignore # noqa: F821
 
 
 class ValidMessageWithNameDomainField(EIP712Message):
-    _name_: "string" = "Valid Test Message"  # type: ignore
-    value: "uint256"  # type: ignore
-    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore
+    _name_: "string" = "Valid Test Message"  # type: ignore # noqa: F821
+    value: "uint256"  # type: ignore # noqa: F821
+    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore # noqa: F821,E501
     sub: SubType
 
 
 class InvalidMessageMissingDomainFields(EIP712Message):
-    value: "uint256"  # type: ignore
+    value: "uint256"  # type: ignore # noqa: F821
 
 
 def test_multilevel_message():
@@ -32,7 +28,7 @@ def test_multilevel_message():
 
 def test_invalid_message_without_domain_fields():
     with pytest.raises(ValidationError):
-        msg = InvalidMessageMissingDomainFields(value=1)
+        InvalidMessageMissingDomainFields(value=1)
 
 
 def test_yearn_vaults_message():
@@ -41,16 +37,16 @@ def test_yearn_vaults_message():
     """
 
     class Permit(EIP712Message):
-        _name_: "string" = "Yearn Vault"
-        _version_: "string"
-        _chainId_: "uint256"
-        _verifyingContract_: "address"
+        _name_: "string" = "Yearn Vault"  # type: ignore # noqa: F821
+        _version_: "string"  # type: ignore # noqa: F821
+        _chainId_: "uint256"  # type: ignore # noqa: F821
+        _verifyingContract_: "address"  # type: ignore # noqa: F821
 
-        owner: "address"
-        spender: "address"
-        value: "uint256"
-        nonce: "uint256"
-        deadline: "uint256"
+        owner: "address"  # type: ignore # noqa: F821
+        spender: "address"  # type: ignore # noqa: F821
+        value: "uint256"  # type: ignore # noqa: F821
+        nonce: "uint256"  # type: ignore # noqa: F821
+        deadline: "uint256"  # type: ignore # noqa: F821
 
     name = "Yearn Vault"
     version = "0.3.5"
