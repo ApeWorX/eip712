@@ -12,6 +12,10 @@ TYPE_REGEX = r"^[a-zA-Z_$][a-zA-Z_$0-9]*(\[([1-9]\d*)*\])*$"
 
 
 def validate_has_attribute(attr_name, dict_data):
+    """
+    Validates whether ``dict_data`` contains ``attr_name``, raising
+    :class:`eth_utils.ValidationError` if it does not.
+    """
     if attr_name not in dict_data:
         raise ValidationError("Attribute `{0}` not found in the JSON string".format(attr_name))
 
