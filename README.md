@@ -36,6 +36,16 @@ This project is in early development and should be considered an alpha.
 Things might not work, breaking changes are likely.
 Comments, questions, criticisms and pull requests are welcomed.
 
+## Documentation
+
+To build docs:
+
+```bash
+sphinx-autogen docs/index.rst  # automatically creates modules/* files
+python build_docs.py  # build docs in docs/_build
+python build_docs.py --rsync=/tmp/eip712  # for serving up docs in development
+```
+
 ## License
 
 This project is licensed under the [Apache 2.0 license](https://github.com/ApeWorX/eip712/blob/main/LICENSE).

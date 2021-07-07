@@ -1,3 +1,7 @@
+"""
+Message classes for typed structured data hashing and signing in Ethereum.
+"""
+
 from typing import Dict, NamedTuple
 
 from dataclassy import as_dict, dataclass, fields
@@ -57,11 +61,21 @@ def _hash_eip191_message(signable_message: SignableMessage) -> Hash32:
 
 @dataclass(iter=True, slots=True)
 class EIP712Type:
+    """
+    Dataclass for EIP-712 structured data types (i.e. the contents of an
+    :class:`EIP712Message`).
+    """
+
     @property
     def type(self) -> str:
         return self.__class__.__name__
 
     def field_type(self, field: str) -> str:
+        """
+        Looks up ``field`` via type annotations, returning the underlying ABI
+        type (e.g. ``"uint256"``) or :class:`EIP712Type`. Raises ``KeyError``
+        if the field doesn't exist.
+        """
         typ = self.__annotations__[field]
 
         if isinstance(typ, str):
@@ -80,6 +94,10 @@ class EIP712Type:
             )
 
     def types(self) -> dict:
+        """
+        Recursively built ``dict`` (name of type ``->`` list of subtypes) of
+        the underlying fields' types.
+        """
         types: Dict[str, list] = {}
         types[self.type] = []
 
@@ -95,12 +113,21 @@ class EIP712Type:
 
     @property
     def data(self) -> dict:
+        """
+        Recursively built ``dict`` of the underlying data, to be used for
+        serialization.
+        """
         d = as_dict(self)  # NOTE: Handles recursion
         return {k: v for (k, v) in d.items() if k not in HEADER_FIELDS}
 
 
 # TODO: Make type of EIP712Message a subtype of SignableMessage somehow
 class EIP712Message(EIP712Type):
+    """
+    Container for EIP-712 messages with type information, domain separator
+    parameters, and the message object.
+    """
+
     def __post_init__(self):
         # At least one of the header fields must be in the EIP712 message header
         if len(self.domain) == 0:
@@ -111,6 +138,7 @@ class EIP712Message(EIP712Type):
 
     @property
     def domain(self) -> dict:
+        """The EIP-712 domain fields (built using ``HEADER_FIELDS``)."""
         return {
             field.replace("_", ""): getattr(self, field)
             for field in fields(self.__class__, internals=True)
@@ -119,14 +147,20 @@ class EIP712Message(EIP712Type):
 
     @property
     def domain_type(self) -> list:
+        """The EIP-712 domain structure to be used for serialization."""
         return [{"name": field, "type": self.field_type(f"_{field}_")} for field in self.domain]
 
     @property
     def version(self) -> bytes:
+        """
+        The current major version of the signing domain. Signatures from
+        different versions are not compatible.
+        """
         return b"\x01"
 
     @property
     def header(self) -> bytes:
+        """The EIP-712 message header."""
         return hash_domain(
             {
                 "types": {
@@ -138,6 +172,7 @@ class EIP712Message(EIP712Type):
 
     @property
     def body_data(self) -> dict:
+        """The EIP-712 structured message to be used for serialization and hashing."""
         types = dict(self.types(), EIP712Domain=self.domain_type)
         msg = {
             "domain": self.domain,
@@ -149,6 +184,7 @@ class EIP712Message(EIP712Type):
 
     @property
     def body(self) -> bytes:
+        """The hash of the EIP-712 message (``body_data``)."""
         return hash_eip712_message(self.body_data)
 
     @property
