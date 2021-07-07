@@ -32,10 +32,9 @@ jobs:
               name: DocumentationHTML
               path: docs/_build/
 
-        # TODO: branch-specific folders for branches other than `main`
         - name: Commit and publish documentation changes to gh-pages branch
           run: |
-              git clone https://github.com/ApeWorX/eip712 --branch gh-pages --single-branch gh-pages
+              git clone https://github.com/${GITHUB_REPOSITORY} --branch gh-pages --single-branch gh-pages
               cp -r docs/_build/* gh-pages/
               cd gh-pages
               touch .nojekyll

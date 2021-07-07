@@ -1,3 +1,7 @@
+"""
+Functions for validating EIP-712 message structure (required fields, etc.).
+"""
+
 # copied under the MIT license from the eth-account project:
 # https://github.com/ethereum/eth-account/blob/41f56e45b49ec1966a72cba12955bc1185cf7284/eth_account/_utils/structured_data/validation.py
 # flake8: noqa
@@ -21,6 +25,10 @@ def validate_has_attribute(attr_name, dict_data):
 
 
 def validate_types_attribute(structured_data):
+    """
+    Validates the existence of the ``types`` field, its contents, and whether identifer and type
+    names are valid. Raises :class:`eth_utils.ValidationError` otherwise.
+    """
     # Check that the data has `types` attribute
     validate_has_attribute("types", structured_data)
 
@@ -62,6 +70,10 @@ def validate_types_attribute(structured_data):
 
 
 def validate_field_declared_only_once_in_struct(field_name, struct_data, struct_name):
+    """
+    Validates that the given ``field_name`` only appears once in
+    ``struct_data``. Raises :class:`eth_utils.ValidationError` otherwise.
+    """
     if len([field for field in struct_data if field["name"] == field_name]) != 1:
         raise ValidationError(
             "Attribute `{0}` not declared or declared more than once in {1}".format(
@@ -79,10 +91,15 @@ EIP712_DOMAIN_FIELDS = [
 
 
 def used_header_fields(EIP712Domain_data):
+    """Returns only the ``EIP712_DOMAIN_FIELDS`` from the given domain data."""
     return [field["name"] for field in EIP712Domain_data if field["name"] in EIP712_DOMAIN_FIELDS]
 
 
 def validate_EIP712Domain_schema(structured_data):
+    """
+    Verifies that the given ``structured_data`` contains a valid EIP-712
+    domain schema. Raises :class:`eth_utils.ValidationError` otherwise.
+    """
     # Check that the `types` attribute contains `EIP712Domain` schema declaration
     if "EIP712Domain" not in structured_data["types"]:
         raise ValidationError("`EIP712Domain struct` not found in types attribute")
@@ -97,6 +114,10 @@ def validate_EIP712Domain_schema(structured_data):
 
 
 def validate_primaryType_attribute(structured_data):
+    """
+    Verifies that the given ``structured_data`` contains a valid ``primaryType``
+    definition. Raises :class:`eth_utils.ValidationError` otherwise.
+    """
     # Check that `primaryType` attribute is present
     if "primaryType" not in structured_data:
         raise ValidationError("The Structured Data needs to have a `primaryType` attribute")
@@ -117,6 +138,10 @@ def validate_primaryType_attribute(structured_data):
 
 
 def validate_structured_data(structured_data):
+    """
+    Top-level validator that verifies ``structured_data`` is a valid according
+    to the EIP-712 spec. Raises :class:`eth_utils.ValidationError` otherwise.
+    """
     # validate the `types` attribute
     validate_types_attribute(structured_data)
     # validate the `EIP712Domain` struct of `types` attribute

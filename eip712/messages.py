@@ -48,6 +48,9 @@ class SignableMessage(NamedTuple):
 
 # https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L59
 def _hash_eip191_message(signable_message: SignableMessage) -> Hash32:
+    """
+    Hash the given ``signable_message`` according to the EIP-191 Signed Data Standard.
+    """
     version = signable_message.version
     if len(version) != 1:
         raise ValidationError(
@@ -189,6 +192,7 @@ class EIP712Message(EIP712Type):
 
     @property
     def signable_message(self) -> SignableMessage:
+        """The current message as a :class:`SignableMessage` named tuple instance."""
         return SignableMessage(
             HexBytes(b"\x01"),
             self.header,

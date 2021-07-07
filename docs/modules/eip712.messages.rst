@@ -2,11 +2,4 @@ eip712.messages
 ===============
 
 .. automodule:: eip712.messages
-
-   .. rubric:: Classes
-
-   .. autosummary::
-
-      EIP712Message
-      EIP712Type
-
+    :members:
