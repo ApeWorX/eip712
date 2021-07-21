@@ -2,16 +2,4 @@ eip712.validation
 =================
 
 .. automodule:: eip712.validation
-
-   .. rubric:: Functions
-
-   .. autosummary::
-
-      used_header_fields
-      validate_EIP712Domain_schema
-      validate_field_declared_only_once_in_struct
-      validate_has_attribute
-      validate_primaryType_attribute
-      validate_structured_data
-      validate_types_attribute
-
+    :members:
