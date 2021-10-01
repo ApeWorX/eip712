@@ -93,7 +93,7 @@ class EIP712Type:
         else:
             raise ValidationError(
                 f"'{field}' type annotation must either be a subclass of "
-                f"`EIP712Type` or valid ABI Type string, not {typ.__class__.__name__}"
+                f"`EIP712Type` or valid ABI Type string, not {typ.__name__}"
             )
 
     def types(self) -> dict:

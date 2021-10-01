@@ -14,6 +14,10 @@ class ValidMessageWithNameDomainField(EIP712Message):
     sub: SubType
 
 
+class MessageWithInvalidNameType(EIP712Message):
+    _name_: str = "Invalid Test Message"  # type: ignore # noqa: F821
+
+
 class InvalidMessageMissingDomainFields(EIP712Message):
     value: "uint256"  # type: ignore # noqa: F821
 
@@ -29,6 +33,19 @@ def test_multilevel_message():
 def test_invalid_message_without_domain_fields():
     with pytest.raises(ValidationError):
         InvalidMessageMissingDomainFields(value=1)
+
+
+def test_invalid_type():
+    message = MessageWithInvalidNameType()
+
+    with pytest.raises(ValidationError) as err:
+        message.field_type("_name_")
+
+    expected_error_message = (
+        "'_name_' type annotation must either be a subclass of "
+        "`EIP712Type` or valid ABI Type string, not str"
+    )
+    assert expected_error_message in str(err.value)
 
 
 def test_yearn_vaults_message():
