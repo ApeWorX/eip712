@@ -10,10 +10,10 @@ extras_require = {
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
     ],
     "lint": [
-        "black>=20.8b1,<21.0",  # auto-formatter and linter
-        "mypy>=0.800,<1.0",  # Static type analyzer
-        "flake8>=3.8.3,<4.0",  # Style linter
-        "isort>=5.7.0,<6.0",  # Import sorting linter
+        "black>=22.3.0,<23.0",  # auto-formatter and linter
+        "mypy>=0.950,<1.0",  # Static type analyzer
+        "flake8>=4.0.1,<5.0",  # Style linter
+        "isort>=5.10.1,<6.0",  # Import sorting linter
     ],
     "doc": [
         "myst-parser>=0.17.0,<0.18",  # Tools for parsing markdown files in the docs
