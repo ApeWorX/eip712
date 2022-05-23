@@ -29,7 +29,33 @@ python3 setup.py install
 
 ## Quick Usage
 
-TODO: Describe library overview in code
+Create EIP-712 models:
+
+```python
+from eip712.messages import EIP712Message, EIP712Type
+
+
+class Person(EIP712Type):
+    name: "string"
+    wallet: "address"
+
+
+class Mail(EIP712Message):
+    _chainId_: "uint256" = 1
+    _name_: "string" = "Ether Mail"
+    _verifyingContract_: "address" = "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+    _version_: "string" = "1"
+
+    sender: Person
+    receiver: Person
+
+
+sender = Person("Cow", "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826")
+receiver = Person("Bob", "0xB0B0b0b0b0b0B000000000000000000000000000")
+mail = Mail(sender=TEST_SENDER, receiver=TEST_RECEIVER)
+
+print(f"Do you wish to sign {mail.signable_message}?")
+```
 
 ## Development
 
