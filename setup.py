@@ -16,10 +16,11 @@ extras_require = {
         "isort>=5.7.0,<6.0",  # Import sorting linter
     ],
     "doc": [
-        "Sphinx>=3.4.3,<4",  # Documentation generator
-        "sphinx_rtd_theme>=0.1.9,<1",  # Readthedocs.org theme
-        "towncrier>=19.2.0, <20",  # Generate release notes
-        "sphinx-multiversion>=0.2.4,<0.3.0",  # build multiple versions of docs from tags & branches
+        "myst-parser>=0.17.0,<0.18",  # Tools for parsing markdown files in the docs
+        "sphinx-click>=3.1.0,<4.0",  # For documenting CLI
+        "Sphinx>=4.4.0,<5.0",  # Documentation generator
+        "sphinx_rtd_theme>=1.0.0,<2",  # Readthedocs.org theme
+        "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
     ],
     "release": [  # `release` GitHub Action job uses this
         "setuptools",  # Installation tool
@@ -61,9 +62,9 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1.0",
-        "eth-utils>=1.3.0,<2",
-        "eth-abi>=2.0.0b7,<3",
-        "eth-typing>=2.2,<3.0",
+        "eth-utils>=1.3.0,<3",
+        "eth-abi>=2.0.0b7,<4",
+        "eth-typing>=2.2,<4.0",
         "hexbytes<0.3.0",
         "pycryptodome>=3.4.7,<4.0.0",
         "importlib-metadata ; python_version<'3.8'",
@@ -77,7 +78,7 @@ setup(
     packages=find_packages(exclude=["tests", "tests.*"]),
     package_data={"eip712": ["py.typed"]},
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
@@ -88,5 +89,6 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
 )

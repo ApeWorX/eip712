@@ -27,7 +27,7 @@ HEADER_FIELDS = set(f"_{field}_" for field in EIP712_DOMAIN_FIELDS)
 # https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L39
 class SignableMessage(NamedTuple):
     """
-    These are the components of an EIP-191_ signable message. Other message formats
+    These are the components of an EIP-191 signable message. Other message formats
     can be encoded into this format for easy signing. This data structure doesn't need to
     know about the original message format.
 

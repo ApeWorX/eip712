@@ -1,6 +1,7 @@
 # eip712
 
-Message classes for typed structured data hashing and signing in Ethereum. See [EIP-712](https://eips.ethereum.org/EIPS/eip-712) for details.
+Message classes for typed structured data hashing and signing in Ethereum.
+See [EIP-712](https://eips.ethereum.org/EIPS/eip-712) for details.
 
 ## Dependencies
 
@@ -35,16 +36,6 @@ TODO: Describe library overview in code
 This project is in early development and should be considered an alpha.
 Things might not work, breaking changes are likely.
 Comments, questions, criticisms and pull requests are welcomed.
-
-## Documentation
-
-To build docs:
-
-```bash
-sphinx-autogen docs/index.rst  # automatically creates modules/* files
-python build_docs.py  # build docs in docs/_build
-python build_docs.py --rsync=/tmp/eip712  # for serving up docs in development
-```
 
 ## License
 
