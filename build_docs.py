@@ -11,6 +11,8 @@ import subprocess
 from distutils.version import LooseVersion
 from pathlib import Path
 
+import click
+
 REDIRECT_HTML = """
 <!DOCTYPE html>
 <meta charset="utf-8">
@@ -22,7 +24,7 @@ DOCS_BUILD_PATH = Path("docs/_build")
 
 
 def run(args):
-    print("Running:", args)
+    click.echo("Running:", args)
     subprocess.check_call(args)
 
 
@@ -67,9 +69,11 @@ def main():
     elif all_releases:
         stable = max(all_releases)
     else:
-        print("WARNING: Couldn't find any released versions. Going to use 'latest' for 'stable'.")
+        click.echo(
+            "WARNING: Couldn't find any released versions. Going to use 'latest' for 'stable'."
+        )
         stable = "latest"
-    print(f"Copying latest stable release {stable} to 'stable'.")
+    click.echo(f"Copying latest stable release {stable} to 'stable'.")
     shutil.copytree(DOCS_BUILD_PATH / str(stable), DOCS_BUILD_PATH / "stable")
 
     # set up the redirect at /index.html
@@ -88,16 +92,16 @@ if __name__ == "__main__":
     main()
     if args.rsync:
         run(["rsync", "-pthrvz", "--delete", "./docs/_build/", args.rsync])
-        print("\n")
-        print(
+        click.echo("\n")
+        click.echo(
             (
                 "NOTE: To serve these files in development, run `python3 -m http.server` inside "
                 "`{}`, then go to http://127.0.0.1:8000/projectname in the browser."
             ).format(Path(args.rsync).parent)
         )
-        print(
+        click.echo(
             "NOTE: If you're making changes to docs locally, go to the 'latest' branch to see "
             "your changes. Also, due to the way sphinx-multiversion integrates with git, you need "
             "to commit your changes each time before building."
         )
-        print()
+        click.echo()

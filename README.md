@@ -28,7 +28,26 @@ python3 setup.py install
 
 ## Quick Usage
 
-TODO: Describe library overview in code
+Define EIP-712 models:
+
+```python
+from eip712.messages import EIP712Message, EIP712Type
+
+
+class Person(EIP712Type):
+    name: "string"
+    wallet: "address"
+
+
+class Mail(EIP712Message):
+    _chainId_: "uint256" = 1
+    _name_: "string" = "Ether Mail"
+    _verifyingContract_: "address" = "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+    _version_: "string" = "1"
+
+    sender: Person
+    receiver: Person
+```
 
 ## Development
 

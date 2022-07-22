@@ -88,7 +88,7 @@ class EIP712Type:
             return typ
 
         elif issubclass(typ, EIP712Type):
-            return typ.type
+            return str(typ.type)
 
         else:
             raise ValidationError(
