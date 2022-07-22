@@ -4,22 +4,22 @@ from eip712.messages import EIP712Message, EIP712Type, ValidationError
 
 
 class SubType(EIP712Type):
-    inner: "uint256"  # type: ignore # noqa: F821
+    inner: "uint256"  # type: ignore
 
 
 class ValidMessageWithNameDomainField(EIP712Message):
-    _name_: "string" = "Valid Test Message"  # type: ignore # noqa: F821
-    value: "uint256"  # type: ignore # noqa: F821
-    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore # noqa: F821,E501
+    _name_: "string" = "Valid Test Message"  # type: ignore
+    value: "uint256"  # type: ignore
+    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore
     sub: SubType
 
 
 class MessageWithInvalidNameType(EIP712Message):
-    _name_: str = "Invalid Test Message"  # type: ignore # noqa: F821
+    _name_: str = "Invalid Test Message"  # type: ignore
 
 
 class InvalidMessageMissingDomainFields(EIP712Message):
-    value: "uint256"  # type: ignore # noqa: F821
+    value: "uint256"  # type: ignore
 
 
 def test_multilevel_message():

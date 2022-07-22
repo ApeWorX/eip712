@@ -1,6 +1,9 @@
 [build-system]
 requires = ["setuptools>=51.1.1", "wheel", "setuptools_scm[toml]>=5.0"]
 
+[tool.mypy]
+exclude = "build/"
+
 [tool.setuptools_scm]
 write_to = "eip712/version.py"
 
@@ -11,27 +14,11 @@ write_to = "eip712/version.py"
 
 [tool.black]
 line-length = 100
-target-version = ['py36', 'py37', 'py38']
+target-version = ['py37', 'py38', 'py39', 'py310']
 include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | build
-  | dist
-  | env
-  | venv
-)/
-'''
 
 [tool.pytest.ini_options]
 addopts = """
-    -n auto
     --cov-branch
     --cov-report term
     --cov-report html
@@ -46,7 +33,5 @@ markers = "fuzzing: Run Hypothesis fuzz test suite"
 line_length = 100
 force_grid_wrap = 0
 include_trailing_comma = true
-known_third_party = ["dataclassy", "eth_abi", "eth_utils", "setuptools"]
-known_first_party = ["eip712"]
 multi_line_output = 3
 use_parentheses = true
