@@ -15,16 +15,18 @@ jobs:
               python-version: 3.8
 
         - name: Install Dependencies
-          run: pip install .[lint]
+          run: |
+            python -m pip install --upgrade pip
+            pip install .[lint]
 
         - name: Run Black
           run: black --check .
 
         - name: Run flake8
-          run: flake8 ./eip712 ./tests ./setup.py
+          run: flake8 .
 
         - name: Run isort
-          run: isort --check-only --diff ./eip712 ./tests
+          run: isort --check-only .
     
     type-check:
         runs-on: ubuntu-latest
@@ -38,17 +40,20 @@ jobs:
               python-version: 3.8
 
         - name: Install Dependencies
-          run: pip install .[lint]
+          run: |
+            python -m pip install --upgrade pip
+            pip install .[lint,test]
 
         - name: Run MyPy
-          run: mypy -p eip712
+          run: mypy .
 
     functional:
         runs-on: ubuntu-latest
 
         strategy:
             matrix:
-                python-version: [3.6, 3.7, 3.8]
+                os: [ubuntu-latest, macos-latest]   # eventually add `windows-latest`
+                python-version: [3.7, 3.8, 3.9, "3.10"]
 
         steps:
         - uses: actions/checkout@v2
@@ -59,10 +64,12 @@ jobs:
               python-version: ${{ matrix.python-version }}
 
         - name: Install Dependencies
-          run: pip install .[test]
+          run: |
+            python -m pip install --upgrade pip
+            pip install .[test]
 
         - name: Run Tests
-          run: pytest -m "not fuzzing"
+          run: pytest -m "not fuzzing" -s --cov
 
 #    fuzzing:
 #        runs-on: ubuntu-latest
