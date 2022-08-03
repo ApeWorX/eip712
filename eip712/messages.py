@@ -10,10 +10,8 @@ from eth_typing import Hash32
 from eth_utils.curried import ValidationError, keccak
 from hexbytes import HexBytes
 
-# isort: off
-# We need isort off for these two imports because black makes a conflicting change.
-from .hashing import hash_domain  # type:ignore
-from .hashing import hash_message as hash_eip712_message
+from eip712.hashing import hash_domain
+from eip712.hashing import hash_message as hash_eip712_message
 
 EIP712_DOMAIN_FIELDS = [
     "name",
@@ -27,9 +25,9 @@ HEADER_FIELDS = set(f"_{field}_" for field in EIP712_DOMAIN_FIELDS)
 # https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L39
 class SignableMessage(NamedTuple):
     """
-    These are the components of an EIP-191_ signable message. Other message formats
-    can be encoded into this format for easy signing. This data structure doesn't need to
-    know about the original message format.
+    These are the components of an `EIP-191 <https://eips.ethereum.org/EIPS/eip-191>`__
+    signable message. Other message formats can be encoded into this format for easy signing.
+    This data structure doesn't need to know about the original message format.
 
     In typical usage, you should never need to create these by hand. Instead, use
     one of the available encode_* methods in this module, like:
@@ -37,8 +35,6 @@ class SignableMessage(NamedTuple):
         - :meth:`encode_structured_data`
         - :meth:`encode_intended_validator`
         - :meth:`encode_structured_data`
-
-    .. _EIP-191: https://eips.ethereum.org/EIPS/eip-191
     """
 
     version: bytes  # must be length 1
@@ -65,8 +61,8 @@ def _hash_eip191_message(signable_message: SignableMessage) -> Hash32:
 @dataclass(iter=True, slots=True)
 class EIP712Type:
     """
-    Dataclass for EIP-712 structured data types (i.e. the contents of an
-    :class:`EIP712Message`).
+    Dataclass for `EIP-712 <https://eips.ethereum.org/EIPS/eip-712>`__ structured data types
+    (i.e. the contents of an :class:`EIP712Message`).
     """
 
     @property
@@ -101,8 +97,7 @@ class EIP712Type:
         Recursively built ``dict`` (name of type ``->`` list of subtypes) of
         the underlying fields' types.
         """
-        types: Dict[str, list] = {}
-        types[self.type] = []
+        types: Dict[str, list] = {self.type: []}
 
         for field in fields(self.__class__):
             value = getattr(self, field)

@@ -16,10 +16,11 @@ extras_require = {
         "isort>=5.10.1",  # Import sorting linter
     ],
     "doc": [
-        "Sphinx>=3.4.3,<4",  # Documentation generator
-        "sphinx_rtd_theme>=0.1.9,<1",  # Readthedocs.org theme
-        "towncrier>=19.2.0, <20",  # Generate release notes
-        "sphinx-multiversion>=0.2.4,<0.3.0",  # build multiple versions of docs from tags & branches
+        "myst-parser>=0.17.0,<0.18",  # Tools for parsing markdown files in the docs
+        "sphinx-click>=3.1.0,<4.0",  # For documenting CLI
+        "Sphinx>=4.4.0,<5.0",  # Documentation generator
+        "sphinx_rtd_theme>=1.0.0,<2",  # Readthedocs.org theme
+        "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
     ],
     "release": [  # `release` GitHub Action job uses this
         "setuptools",  # Installation tool
