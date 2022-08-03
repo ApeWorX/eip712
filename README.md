@@ -1,10 +1,11 @@
-# eip712
+# Quick Start
 
-Message classes for typed structured data hashing and signing in Ethereum. See [EIP-712](https://eips.ethereum.org/EIPS/eip-712) for details.
+Message classes for typed structured data hashing and signing in Ethereum.
+See [EIP-712](https://eips.ethereum.org/EIPS/eip-712) for details.
 
 ## Dependencies
 
-* [python3](https://www.python.org/downloads) version 3.6 or greater, python3-dev
+* [python3](https://www.python.org/downloads) version 3.7.2 or greater, python3-dev
 
 ## Installation
 
@@ -28,24 +29,23 @@ python3 setup.py install
 
 ## Quick Usage
 
-TODO: Describe library overview in code
+Define EIP-712 models:
 
-## Development
+```python
+from eip712.messages import EIP712Message, EIP712Type
 
-This project is in early development and should be considered an alpha.
-Things might not work, breaking changes are likely.
-Comments, questions, criticisms and pull requests are welcomed.
 
-## Documentation
+class Person(EIP712Type):
+    name: "string"
+    wallet: "address"
 
-To build docs:
 
-```bash
-sphinx-autogen docs/index.rst  # automatically creates modules/* files
-python build_docs.py  # build docs in docs/_build
-python build_docs.py --rsync=/tmp/eip712  # for serving up docs in development
+class Mail(EIP712Message):
+    _chainId_: "uint256" = 1
+    _name_: "string" = "Ether Mail"
+    _verifyingContract_: "address" = "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+    _version_: "string" = "1"
+
+    sender: Person
+    receiver: Person
 ```
-
-## License
-
-This project is licensed under the [Apache 2.0 license](https://github.com/ApeWorX/eip712/blob/main/LICENSE).

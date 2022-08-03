@@ -1,5 +1,0 @@
-eip712.messages
-===============
-
-.. automodule:: eip712.messages
-    :members:

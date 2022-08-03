@@ -11,11 +11,11 @@ cd eip712
 python3 -m venv venv
 source venv/bin/activate
 
-# install brownie into the virtual environment
+# install eip712 into the virtual environment
 python setup.py install
 
 # install the developer dependencies (-e is interactive mode)
-pip install -e .[dev]
+pip install -e .'[dev]'
 ```
 
 ## Pre-Commit Hooks
@@ -30,7 +30,30 @@ pip install pre-commit
 pre-commit install
 ```
 
-Commiting will now automatically run the local hooks and ensure that your commit passes all lint checks.
+Committing will now automatically run the local hooks and ensure that your commit passes all lint checks.
+
+## Running the docs locally
+
+First, make sure you have the docs-related tooling installed:
+
+```bash
+pip install -e .'[docs]'
+```
+
+Then, run the following from the root project directory:
+
+```bash
+python build_docs.py
+```
+
+For the best viewing experience, use a local server:
+
+```bash
+python -m http.server --directory "docs/_build/" --bind 127.0.0.1 1337
+```
+
+Then, open your browser to `127.0.0.1:1337` and click the `eip712` directory link.
+NOTE: Serving from `"docs/_build/"` rather than `"docs/_build/eip712"` is necessary to make routing work.
 
 ## Pull Requests
 
