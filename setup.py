@@ -4,7 +4,7 @@ from setuptools import find_packages, setup  # type: ignore
 
 extras_require = {
     "test": [  # `test` GitHub Action jobs uses this
-        "pytest>=6.0,<7.0",  # Core testing package
+        "pytest>=6.0",  # Core testing package
         "pytest-xdist",  # multi-process runner
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
@@ -60,15 +60,15 @@ setup(
     url="https://github.com/ApeWorX/eip712",
     include_package_data=True,
     install_requires=[
-        "dataclassy>=0.8.2,<1.0",
+        "dataclassy>=0.8.2,<1",
         "eth-utils>=2.0.0,<3",
         "eth-abi>=3.0.1,<4",
-        "eth-typing>=3.0,<4.0",
+        "eth-typing>=3.0,<4",
         "hexbytes<0.3.0",
-        "pycryptodome>=3.4.7,<4.0.0",
+        "pycryptodome>=3.4.7,<4",
         "importlib-metadata ; python_version<'3.8'",
     ],
-    python_requires=">=3.7,<4",
+    python_requires=">=3.7.2,<4",
     extras_require=extras_require,
     py_modules=["eip712"],
     license="Apache-2.0",

@@ -11,11 +11,11 @@ cd eip712
 python3 -m venv venv
 source venv/bin/activate
 
-# install brownie into the virtual environment
+# install eip712 into the virtual environment
 python setup.py install
 
 # install the developer dependencies (-e is interactive mode)
-pip install -e .[dev]
+pip install -e .'[dev]'
 ```
 
 ## Pre-Commit Hooks
@@ -30,7 +30,7 @@ pip install pre-commit
 pre-commit install
 ```
 
-Commiting will now automatically run the local hooks and ensure that your commit passes all lint checks.
+Committing will now automatically run the local hooks and ensure that your commit passes all lint checks.
 
 ## Pull Requests
 
