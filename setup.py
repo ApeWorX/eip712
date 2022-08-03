@@ -62,8 +62,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1",
-        "eth-utils>=2.0.0,<3",
-        "eth-abi>=3.0.1,<4",
+        "eth-utils>=1.10.0,<3",
+        "eth-abi>=2.2.0,<4",
         "eth-typing>=3.0,<4",
         "hexbytes<0.3.0",
         "pycryptodome>=3.4.7,<4",
