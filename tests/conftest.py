@@ -1,4 +1,5 @@
 import pytest
+from hexbytes import HexBytes
 
 from eip712.messages import EIP712Message, EIP712Type
 
@@ -11,6 +12,7 @@ PERMIT_SPENDER_ADDRESS = "0x1CEE82EEd89Bd5Be5bf2507a92a755dcF1D8e8dc"
 PERMIT_ALLOWANCE = 100
 PERMIT_NONCE = 0
 PERMIT_DEADLINE = 1619151069
+PERMIT_SALT = HexBytes(123456789)
 
 
 class SubType(EIP712Type):
@@ -37,6 +39,7 @@ class Permit(EIP712Message):
     _version_: "string"  # type: ignore
     _chainId_: "uint256"  # type: ignore
     _verifyingContract_: "address"  # type: ignore
+    _salt_: "bytes32"  # type: ignore
 
     owner: "address"  # type: ignore
     spender: "address"  # type: ignore
@@ -57,6 +60,7 @@ def permit():
         _version_=PERMIT_VERSION,
         _chainId_=PERMIT_CHAIN_ID,
         _verifyingContract_=PERMIT_VAULT_ADDRESS,
+        _salt_=PERMIT_SALT,
         owner=PERMIT_OWNER_ADDRESS,
         spender=PERMIT_SPENDER_ADDRESS,
         value=PERMIT_ALLOWANCE,
@@ -89,6 +93,7 @@ def permit_raw_data():
             "version": PERMIT_VERSION,
             "chainId": PERMIT_CHAIN_ID,
             "verifyingContract": PERMIT_VAULT_ADDRESS,
+            "salt": PERMIT_SALT,
         },
         "primaryType": "Permit",
         "message": {
