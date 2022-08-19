@@ -79,6 +79,7 @@ def permit_raw_data():
                 {"name": "version", "type": "string"},
                 {"name": "chainId", "type": "uint256"},
                 {"name": "verifyingContract", "type": "address"},
+                {"name": "salt", "type": "bytes32"},
             ],
             "Permit": [
                 {"name": "owner", "type": "address"},
