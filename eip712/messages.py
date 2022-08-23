@@ -18,6 +18,7 @@ EIP712_DOMAIN_FIELDS = [
     "version",
     "chainId",
     "verifyingContract",
+    "salt",
 ]
 HEADER_FIELDS = set(f"_{field}_" for field in EIP712_DOMAIN_FIELDS)
 

@@ -19,15 +19,13 @@ def test_invalid_message_without_domain_fields():
 
 def test_invalid_type():
     message = MessageWithInvalidNameType()
-
-    with pytest.raises(ValidationError) as err:
-        message.field_type("_name_")
-
     expected_error_message = (
         "'_name_' type annotation must either be a subclass of "
         "`EIP712Type` or valid ABI Type string, not str"
     )
-    assert expected_error_message in str(err.value)
+
+    with pytest.raises(ValidationError, match=expected_error_message):
+        message.field_type("_name_")
 
 
 def test_yearn_vaults_message(permit, permit_raw_data):
