@@ -7,6 +7,9 @@ labels: 'category: bug'
 
 * OS: macOS / linux / win
 * Python Version: x.x.x
+
+If using with `ape`:
+
 * `ape` and plugin versions:
 
 ```sh
