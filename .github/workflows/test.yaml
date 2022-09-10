@@ -27,7 +27,7 @@ jobs:
 
         - name: Run isort
           run: isort --check-only .
-    
+
     type-check:
         runs-on: ubuntu-latest
 
@@ -48,12 +48,12 @@ jobs:
           run: mypy .
 
     functional:
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os }}
 
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest]   # eventually add `windows-latest`
-                python-version: [3.7, 3.8, 3.9, "3.10"]
+                python-version: [3.8, 3.9, "3.10"]
 
         steps:
         - uses: actions/checkout@v2
@@ -69,8 +69,9 @@ jobs:
             pip install .[test]
 
         - name: Run Tests
-          run: pytest -m "not fuzzing" -s --cov
+          run: pytest -m "not fuzzing" -n 0 -s --cov
 
+# NOTE: uncomment this block after you've marked tests with @pytest.mark.fuzzing
 #    fuzzing:
 #        runs-on: ubuntu-latest
 #
