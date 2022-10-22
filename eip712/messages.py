@@ -13,6 +13,9 @@ from hexbytes import HexBytes
 from eip712.hashing import hash_domain
 from eip712.hashing import hash_message as hash_eip712_message
 
+# ! Do not change the order of the fields in this list !
+# To correctly encode and hash the domain fields, they
+# must be in this precise order.
 EIP712_DOMAIN_FIELDS = [
     "name",
     "version",
@@ -20,7 +23,7 @@ EIP712_DOMAIN_FIELDS = [
     "verifyingContract",
     "salt",
 ]
-HEADER_FIELDS = set(f"_{field}_" for field in EIP712_DOMAIN_FIELDS)
+HEADER_FIELDS = [f"_{field}_" for field in EIP712_DOMAIN_FIELDS]
 
 
 # https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L39
@@ -138,10 +141,12 @@ class EIP712Message(EIP712Type):
     @property
     def domain(self) -> dict:
         """The EIP-712 domain fields (built using ``HEADER_FIELDS``)."""
+        # Ensure that HEADER_FIELDS are in the following order:
+        # name, version, chainId, verifyingContract, salt
         return {
             field.replace("_", ""): getattr(self, field)
-            for field in fields(self.__class__, internals=True)
-            if field in HEADER_FIELDS
+            for field in HEADER_FIELDS
+            if field in fields(self.__class__, internals=True)
         }
 
     @property
