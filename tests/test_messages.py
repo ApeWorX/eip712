@@ -4,9 +4,9 @@ from eip712.messages import ValidationError
 
 from .conftest import (
     InvalidMessageMissingDomainFields,
+    MessageWithCanonicalDomainFieldOrder,
     MessageWithInvalidNameType,
     MessageWithNonCanonicalDomainFieldOrder,
-    MessageWithCanonicalDomainFieldOrder,
 )
 
 
