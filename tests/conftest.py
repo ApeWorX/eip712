@@ -26,6 +26,22 @@ class ValidMessageWithNameDomainField(EIP712Message):
     sub: SubType
 
 
+class MessageWithNonCanonicalDomainFieldOrder(EIP712Message):
+    _name_: "string" = PERMIT_NAME  # type: ignore
+    _salt_: "bytes32" = PERMIT_SALT  # type: ignore
+    _chainId_: "uint256" = PERMIT_CHAIN_ID  # type: ignore
+    _version_: "string" = PERMIT_VERSION  # type: ignore
+    _verifyingContract_: "address" = PERMIT_VAULT_ADDRESS  # type: ignore
+
+
+class MessageWithCanonicalDomainFieldOrder(EIP712Message):
+    _name_: "string" = PERMIT_NAME  # type: ignore
+    _version_: "string" = PERMIT_VERSION  # type: ignore
+    _chainId_: "uint256" = PERMIT_CHAIN_ID  # type: ignore
+    _verifyingContract_: "address" = PERMIT_VAULT_ADDRESS  # type: ignore
+    _salt_: "bytes32" = PERMIT_SALT  # type: ignore
+
+
 class MessageWithInvalidNameType(EIP712Message):
     _name_: str = "Invalid Test Message"  # type: ignore
 
