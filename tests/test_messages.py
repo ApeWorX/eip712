@@ -2,7 +2,12 @@ import pytest
 
 from eip712.messages import ValidationError
 
-from .conftest import InvalidMessageMissingDomainFields, MessageWithInvalidNameType
+from .conftest import (
+    InvalidMessageMissingDomainFields,
+    MessageWithCanonicalDomainFieldOrder,
+    MessageWithInvalidNameType,
+    MessageWithNonCanonicalDomainFieldOrder,
+)
 
 
 def test_multilevel_message(valid_message_with_name_domain_field):
@@ -34,3 +39,10 @@ def test_yearn_vaults_message(permit, permit_raw_data):
     """
 
     assert permit.body_data == permit_raw_data
+
+
+def test_eip712_domain_field_order_is_invariant():
+    assert (
+        MessageWithCanonicalDomainFieldOrder.domain
+        == MessageWithNonCanonicalDomainFieldOrder.domain
+    )
