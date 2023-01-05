@@ -49,21 +49,16 @@ def validate_types_attribute(structured_data):
                 )
             # Check that field["name"] matches with IDENTIFIER_REGEX
             if not re.match(IDENTIFIER_REGEX, field["name"]):
-                raise ValidationError(
-                    f"Invalid Identifier `{field['name']}` in `{struct_name}`"
-                )
+                raise ValidationError(f"Invalid Identifier `{field['name']}` in `{struct_name}`")
             # Check that field["type"] matches with TYPE_REGEX
             if not re.match(TYPE_REGEX, field["type"]):
-                raise ValidationError(
-                    f"Invalid Type `{field['type']}` in `{struct_name}`"
-                )
+                raise ValidationError(f"Invalid Type `{field['type']}` in `{struct_name}`")
 
 
 def validate_field_declared_only_once_in_struct(field_name, struct_data, struct_name):
     if len([field for field in struct_data if field["name"] == field_name]) != 1:
         raise ValidationError(
-            f"Attribute `{field_name}` not declared or declared more "
-            f"than once in {struct_name}"
+            f"Attribute `{field_name}` not declared or declared more " f"than once in {struct_name}"
         )
 
 
@@ -76,11 +71,7 @@ EIP712_DOMAIN_FIELDS = [
 
 
 def used_header_fields(EIP712Domain_data):
-    return [
-        field["name"]
-        for field in EIP712Domain_data
-        if field["name"] in EIP712_DOMAIN_FIELDS
-    ]
+    return [field["name"] for field in EIP712Domain_data if field["name"] in EIP712_DOMAIN_FIELDS]
 
 
 def validate_EIP712Domain_schema(structured_data):
@@ -92,21 +83,15 @@ def validate_EIP712Domain_schema(structured_data):
     EIP712Domain_data = structured_data["types"]["EIP712Domain"]
     header_fields = used_header_fields(EIP712Domain_data)
     if len(header_fields) == 0:
-        raise ValidationError(
-            f"One of {EIP712_DOMAIN_FIELDS} must be defined in {structured_data}"
-        )
+        raise ValidationError(f"One of {EIP712_DOMAIN_FIELDS} must be defined in {structured_data}")
     for field in header_fields:
-        validate_field_declared_only_once_in_struct(
-            field, EIP712Domain_data, "EIP712Domain"
-        )
+        validate_field_declared_only_once_in_struct(field, EIP712Domain_data, "EIP712Domain")
 
 
 def validate_primaryType_attribute(structured_data):
     # Check that `primaryType` attribute is present
     if "primaryType" not in structured_data:
-        raise ValidationError(
-            "The Structured Data needs to have a `primaryType` attribute"
-        )
+        raise ValidationError("The Structured Data needs to have a `primaryType` attribute")
     # Check that `primaryType` value is a string
     if not isinstance(structured_data["primaryType"], str):
         raise ValidationError(

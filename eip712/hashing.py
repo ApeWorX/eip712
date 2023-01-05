@@ -55,9 +55,7 @@ def get_dependencies(primary_type, types):
                 # skip types that we have already encountered
                 continue
             else:
-                raise TypeError(
-                    f"Unable to determine type dependencies with type `{field_type}`."
-                )
+                raise TypeError(f"Unable to determine type dependencies with type `{field_type}`.")
     # Don't need to make a struct as dependency of itself
     deps.remove(primary_type)
 
@@ -191,8 +189,7 @@ def encode_field(types, name, field_type, value):
 
         field_type_of_inside_array = field_type[: field_type.rindex("[")]
         field_type_value_pairs = [
-            encode_field(types, name, field_type_of_inside_array, item)
-            for item in value
+            encode_field(types, name, field_type_of_inside_array, item) for item in value
         ]
 
         # handle empty array
@@ -224,9 +221,7 @@ def encode_data(primary_type, types, data):
     encoded_values = [hash_struct_type(primary_type, types)]
 
     for field in types[primary_type]:
-        type, value = encode_field(
-            types, field["name"], field["type"], data[field["name"]]
-        )
+        type, value = encode_field(types, field["name"], field["type"], data[field["name"]])
         encoded_types.append(type)
         encoded_values.append(value)
 
@@ -241,9 +236,7 @@ def load_and_validate_structured_message(structured_json_string_data):
 
 
 def hash_domain(structured_data):
-    return keccak(
-        encode_data("EIP712Domain", structured_data["types"], structured_data["domain"])
-    )
+    return keccak(encode_data("EIP712Domain", structured_data["types"], structured_data["domain"]))
 
 
 def hash_message(structured_data):
