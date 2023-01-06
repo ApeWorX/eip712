@@ -7,9 +7,7 @@ Functions for validating EIP-712 message structure (required fields, etc.).
 # flake8: noqa
 import re
 
-from eth_utils import (
-    ValidationError,
-)
+from eth_utils import ValidationError
 
 # Regexes
 IDENTIFIER_REGEX = r"^[a-zA-Z_$][a-zA-Z_$0-9]*$"

@@ -1,29 +1,14 @@
 # copied under the MIT license from eth-account:
 # https://github.com/ethereum/eth-account/blob/cc2feca919474203b0b23450ce7f2deed3ce985c/eth_account/_utils/structured_data/hashing.py
-from itertools import (
-    groupby,
-)
 import json
-from operator import (
-    itemgetter,
-)
+from itertools import groupby
+from operator import itemgetter
 
-from eth_abi import (
-    encode,
-    is_encodable,
-    is_encodable_type,
-)
-from eth_abi.grammar import (
-    parse,
-)
-from eth_utils import (
-    keccak,
-    to_tuple,
-)
+from eth_abi import encode, is_encodable, is_encodable_type
+from eth_abi.grammar import parse
+from eth_utils import keccak, to_tuple
 
-from .validation import (
-    validate_structured_data,
-)
+from .validation import validate_structured_data
 
 
 def get_dependencies(primary_type, types):
