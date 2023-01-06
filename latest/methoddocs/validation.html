@@ -95,54 +95,6 @@
   <section id="module-eip712.validation">
 <span id="validation"></span><h1>Validation<a class="headerlink" href="#module-eip712.validation" title="Permalink to this headline"></a></h1>
 <p>Functions for validating EIP-712 message structure (required fields, etc.).</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.used_header_fields">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">used_header_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">EIP712Domain_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.used_header_fields" title="Permalink to this definition"></a></dt>
-<dd><p>Returns only the <code class="docutils literal notranslate"><span class="pre">EIP712_DOMAIN_FIELDS</span></code> from the given domain data.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.validate_EIP712Domain_schema">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">validate_EIP712Domain_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structured_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.validate_EIP712Domain_schema" title="Permalink to this definition"></a></dt>
-<dd><p>Verifies that the given <code class="docutils literal notranslate"><span class="pre">structured_data</span></code> contains a valid EIP-712
-domain schema. Raises <code class="xref py py-class docutils literal notranslate"><span class="pre">eth_utils.ValidationError</span></code> otherwise.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.validate_field_declared_only_once_in_struct">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">validate_field_declared_only_once_in_struct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.validate_field_declared_only_once_in_struct" title="Permalink to this definition"></a></dt>
-<dd><p>Validates that the given <code class="docutils literal notranslate"><span class="pre">field_name</span></code> only appears once in
-<code class="docutils literal notranslate"><span class="pre">struct_data</span></code>. Raises <code class="xref py py-class docutils literal notranslate"><span class="pre">eth_utils.ValidationError</span></code> otherwise.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.validate_has_attribute">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">validate_has_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.validate_has_attribute" title="Permalink to this definition"></a></dt>
-<dd><p>Validates whether <code class="docutils literal notranslate"><span class="pre">dict_data</span></code> contains <code class="docutils literal notranslate"><span class="pre">attr_name</span></code>, raising
-<code class="xref py py-class docutils literal notranslate"><span class="pre">eth_utils.ValidationError</span></code> if it does not.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.validate_primaryType_attribute">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">validate_primaryType_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structured_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.validate_primaryType_attribute" title="Permalink to this definition"></a></dt>
-<dd><p>Verifies that the given <code class="docutils literal notranslate"><span class="pre">structured_data</span></code> contains a valid <code class="docutils literal notranslate"><span class="pre">primaryType</span></code>
-definition. Raises <code class="xref py py-class docutils literal notranslate"><span class="pre">eth_utils.ValidationError</span></code> otherwise.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.validate_structured_data">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">validate_structured_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structured_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.validate_structured_data" title="Permalink to this definition"></a></dt>
-<dd><p>Top-level validator that verifies <code class="docutils literal notranslate"><span class="pre">structured_data</span></code> is a valid according
-to the EIP-712 spec. Raises <code class="xref py py-class docutils literal notranslate"><span class="pre">eth_utils.ValidationError</span></code> otherwise.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="eip712.validation.validate_types_attribute">
-<span class="sig-prename descclassname"><span class="pre">eip712.validation.</span></span><span class="sig-name descname"><span class="pre">validate_types_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structured_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.validation.validate_types_attribute" title="Permalink to this definition"></a></dt>
-<dd><p>Validates the existence of the <code class="docutils literal notranslate"><span class="pre">types</span></code> field, its contents, and whether identifer and type
-names are valid. Raises <code class="xref py py-class docutils literal notranslate"><span class="pre">eth_utils.ValidationError</span></code> otherwise.</p>
-</dd></dl>
-
 </section>
 
 
