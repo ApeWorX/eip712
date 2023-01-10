@@ -1,20 +1,25 @@
 import pytest
+from hexbytes import HexBytes
 
+from eip712.hashing import hash_message
 from eip712.messages import ValidationError
 
 from .conftest import (
     InvalidMessageMissingDomainFields,
     MessageWithCanonicalDomainFieldOrder,
-    MessageWithInvalidNameType,
     MessageWithNonCanonicalDomainFieldOrder,
 )
 
 
 def test_multilevel_message(valid_message_with_name_domain_field):
-    msg = valid_message_with_name_domain_field
-    assert msg.version.hex() == "01"
-    assert msg.header.hex() == "336a9d2b32d1ab7ea7bbbd2565eca1910e54b74843858dec7a81f772a3c17e17"
-    assert msg.body.hex() == "306af87567fa87e55d2bd925d9a3ed2b1ec2c3e71b142785c053dc60b6ca177b"
+    msg = valid_message_with_name_domain_field.signable_message
+    assert msg.version == HexBytes("0x01")
+    assert msg.header == HexBytes(
+        "0x336a9d2b32d1ab7ea7bbbd2565eca1910e54b74843858dec7a81f772a3c17e17"
+    )
+    assert msg.body == HexBytes(
+        "0x306af87567fa87e55d2bd925d9a3ed2b1ec2c3e71b142785c053dc60b6ca177b"
+    )
 
 
 def test_invalid_message_without_domain_fields():
@@ -22,27 +27,20 @@ def test_invalid_message_without_domain_fields():
         InvalidMessageMissingDomainFields(value=1)
 
 
-def test_invalid_type():
-    message = MessageWithInvalidNameType()
-    expected_error_message = (
-        "'_name_' type annotation must either be a subclass of "
-        "`EIP712Type` or valid ABI Type string, not str"
-    )
-
-    with pytest.raises(ValidationError, match=expected_error_message):
-        message.field_type("_name_")
-
-
 def test_yearn_vaults_message(permit, permit_raw_data):
     """
     Testing a real world EIP712 message for a "permit" call in yearn-vaults.
     """
 
-    assert permit.body_data == permit_raw_data
+    assert permit._body_ == permit_raw_data
 
 
 def test_eip712_domain_field_order_is_invariant():
     assert (
-        MessageWithCanonicalDomainFieldOrder.domain
-        == MessageWithNonCanonicalDomainFieldOrder.domain
+        MessageWithCanonicalDomainFieldOrder._domain_
+        == MessageWithNonCanonicalDomainFieldOrder._domain_
     )
+
+
+def test_ux_tuple_and_starargs(permit, Permit):
+    assert tuple(Permit(*permit)) == tuple(permit)
