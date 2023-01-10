@@ -2,9 +2,9 @@
 Message classes for typed structured data hashing and signing in Ethereum.
 """
 
-from typing import Dict, NamedTuple
+from typing import Any, Dict, NamedTuple, Optional
 
-from dataclassy import as_dict, dataclass, fields
+from dataclassy import dataclass, fields
 from eth_abi import is_encodable_type
 from eth_typing import Hash32
 from eth_utils.curried import ValidationError, keccak
@@ -16,14 +16,20 @@ from eip712.hashing import hash_message as hash_eip712_message
 # ! Do not change the order of the fields in this list !
 # To correctly encode and hash the domain fields, they
 # must be in this precise order.
-EIP712_DOMAIN_FIELDS = [
-    "name",
-    "version",
-    "chainId",
-    "verifyingContract",
-    "salt",
+EIP712_DOMAIN_FIELDS = {
+    "name": "string",
+    "version": "string",
+    "chainId": "uint256",
+    "verifyingContract": "address",
+    "salt": "bytes32",
+}
+
+EIP712_BODY_FIELDS = [
+    "types",
+    "primaryType",
+    "domain",
+    "message",
 ]
-HEADER_FIELDS = [f"_{field}_" for field in EIP712_DOMAIN_FIELDS]
 
 
 # https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L39
@@ -69,133 +75,112 @@ class EIP712Type:
     (i.e. the contents of an :class:`EIP712Message`).
     """
 
-    @property
-    def type(self) -> str:
+    def __repr__(self) -> str:
         return self.__class__.__name__
 
-    def field_type(self, field: str) -> str:
-        """
-        Looks up ``field`` via type annotations, returning the underlying ABI
-        type (e.g. ``"uint256"``) or :class:`EIP712Type`. Raises ``KeyError``
-        if the field doesn't exist.
-        """
-        typ = self.__annotations__[field]
-
-        if isinstance(typ, str):
-            if not is_encodable_type(typ):
-                raise ValidationError(f"'{field}: {typ}' is not a valid ABI type")
-
-            return typ
-
-        elif issubclass(typ, EIP712Type):
-            return str(typ.type)
-
-        else:
-            raise ValidationError(
-                f"'{field}' type annotation must either be a subclass of "
-                f"`EIP712Type` or valid ABI Type string, not {typ.__name__}"
-            )
-
-    def types(self) -> dict:
+    @property
+    def _types_(self) -> dict:
         """
         Recursively built ``dict`` (name of type ``->`` list of subtypes) of
         the underlying fields' types.
         """
-        types: Dict[str, list] = {self.type: []}
+        types: Dict[str, list] = {repr(self): []}
 
         for field in fields(self.__class__):
             value = getattr(self, field)
             if isinstance(value, EIP712Type):
-                types[self.type].append({"name": field, "type": value.type})
-                types.update(value.types())
+                types[repr(self)].append({"name": field, "type": repr(value)})
+                types.update(value._types_)
             else:
-                types[self.type].append({"name": field, "type": self.field_type(field)})
+                # TODO: Use proper ABI typing, not strings
+                field_type = self.__annotations__[field]
+
+                if isinstance(field_type, str):
+                    if not is_encodable_type(field_type):
+                        raise ValidationError(f"'{field}: {field_type}' is not a valid ABI type")
+
+                elif issubclass(field_type, EIP712Type):
+                    field_type = repr(field_type)
+
+                else:
+                    raise ValidationError(
+                        f"'{field}' type annotation must either be a subclass of "
+                        f"`EIP712Type` or valid ABI Type string, not {field_type.__name__}"
+                    )
+
+                types[repr(self)].append({"name": field, "type": field_type})
 
         return types
 
-    @property
-    def data(self) -> dict:
-        """
-        Recursively built ``dict`` of the underlying data, to be used for
-        serialization.
-        """
-        d = as_dict(self)  # NOTE: Handles recursion
-        return {k: v for (k, v) in d.items() if k not in HEADER_FIELDS}
+    def __getitem__(self, key: str) -> Any:
+        if (key.startswith("_") and key.endswith("_")) or key not in fields(self.__class__):
+            raise KeyError("Cannot look up header fields or other attributes this way")
+
+        return getattr(self, key)
 
 
-# TODO: Make type of EIP712Message a subtype of SignableMessage somehow
 class EIP712Message(EIP712Type):
     """
     Container for EIP-712 messages with type information, domain separator
     parameters, and the message object.
     """
 
+    # NOTE: Must override at least one of these fields
+    _name_: Optional[str] = None
+    _version_: Optional[str] = None
+    _chainId_: Optional[int] = None
+    _verifyingContract_: Optional[str] = None
+    _salt_: Optional[bytes] = None
+
     def __post_init__(self):
         # At least one of the header fields must be in the EIP712 message header
-        if len(self.domain) == 0:
+        if not any(getattr(self, f"_{field}_") for field in EIP712_DOMAIN_FIELDS):
             raise ValidationError(
-                f"EIP712 Message definition '{self.type}' must define "
-                f"at least one of {EIP712_DOMAIN_FIELDS}"
+                f"EIP712 Message definition '{repr(self)}' must define "
+                f"at least one of: _{'_, _'.join(EIP712_DOMAIN_FIELDS)}_"
             )
 
     @property
-    def domain(self) -> dict:
-        """The EIP-712 domain fields (built using ``HEADER_FIELDS``)."""
-        # Ensure that HEADER_FIELDS are in the following order:
-        # name, version, chainId, verifyingContract, salt
+    def _domain_(self) -> dict:
+        """The EIP-712 domain structure to be used for serialization and hashing."""
+        domain_type = [
+            {"name": field, "type": abi_type}
+            for field, abi_type in EIP712_DOMAIN_FIELDS.items()
+            if getattr(self, f"_{field}_")
+        ]
         return {
-            field.replace("_", ""): getattr(self, field)
-            for field in HEADER_FIELDS
-            if field in fields(self.__class__, internals=True)
+            "types": {
+                "EIP712Domain": domain_type,
+            },
+            "domain": {field["name"]: getattr(self, f"_{field['name']}_") for field in domain_type},
         }
 
     @property
-    def domain_type(self) -> list:
-        """The EIP-712 domain structure to be used for serialization."""
-        return [{"name": field, "type": self.field_type(f"_{field}_")} for field in self.domain]
-
-    @property
-    def version(self) -> bytes:
-        """
-        The current major version of the signing domain. Signatures from
-        different versions are not compatible.
-        """
-        return b"\x01"
-
-    @property
-    def header(self) -> bytes:
-        """The EIP-712 message header."""
-        return hash_domain(
-            {
-                "types": {
-                    "EIP712Domain": self.domain_type,
-                },
-                "domain": self.domain,
-            }
-        )
-
-    @property
-    def body_data(self) -> dict:
+    def _body_(self) -> dict:
         """The EIP-712 structured message to be used for serialization and hashing."""
-        types = dict(self.types(), EIP712Domain=self.domain_type)
-        msg = {
-            "domain": self.domain,
-            "types": types,
-            "primaryType": self.type,
-            "message": self.data,
+        return {
+            "domain": self._domain_["domain"],
+            "types": dict(self._types_, **self._domain_["types"]),
+            "primaryType": repr(self),
+            "message": {
+                key: getattr(self, key)
+                for key in fields(self.__class__)
+                if not key.startswith("_") or not key.endswith("_")
+            },
         }
-        return msg
 
-    @property
-    def body(self) -> bytes:
-        """The hash of the EIP-712 message (``body_data``)."""
-        return hash_eip712_message(self.body_data)
+    def __getitem__(self, key: str) -> Any:
+        if key in EIP712_BODY_FIELDS:
+            return self._body_[key]
+
+        return super().__getitem__(key)
 
     @property
     def signable_message(self) -> SignableMessage:
         """The current message as a :class:`SignableMessage` named tuple instance."""
+        # TODO: Somehow cast to `eth_account.messages.SignableMessage`
         return SignableMessage(
             HexBytes(b"\x01"),
-            self.header,
-            self.body,
+            hash_domain(self._domain_),
+            hash_eip712_message(self._body_),
         )
