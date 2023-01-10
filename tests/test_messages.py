@@ -1,5 +1,4 @@
 import pytest
-from hexbytes import HexBytes
 
 from eip712.common import SAFE_VERSIONS, create_safe_tx_def
 from eip712.hashing import hash_message
@@ -14,13 +13,9 @@ from .conftest import (
 
 def test_multilevel_message(valid_message_with_name_domain_field):
     msg = valid_message_with_name_domain_field.signable_message
-    assert msg.version == HexBytes("0x01")
-    assert msg.header == HexBytes(
-        "0x336a9d2b32d1ab7ea7bbbd2565eca1910e54b74843858dec7a81f772a3c17e17"
-    )
-    assert msg.body == HexBytes(
-        "0x306af87567fa87e55d2bd925d9a3ed2b1ec2c3e71b142785c053dc60b6ca177b"
-    )
+    assert msg.version.hex() == "0x01"
+    assert msg.header.hex() == "0x336a9d2b32d1ab7ea7bbbd2565eca1910e54b74843858dec7a81f772a3c17e17"
+    assert msg.body.hex() == "0x306af87567fa87e55d2bd925d9a3ed2b1ec2c3e71b142785c053dc60b6ca177b"
 
 
 def test_invalid_message_without_domain_fields():
@@ -61,9 +56,9 @@ def test_gnosis_safe_tx(version):
     msg = tx_def(MSIG_ADDRESS, 0, b"", 0, 0, 0, 0, MSIG_ADDRESS, MSIG_ADDRESS, 0)
 
     assert msg.signable_message.header.hex() == (
-        "88fbc465dedd7fe71b7baef26a1f46cdaadd50b95c77cbe88569195a9fe589ab"
+        "0x88fbc465dedd7fe71b7baef26a1f46cdaadd50b95c77cbe88569195a9fe589ab"
         if version in ("1.3.0",)
-        else "590e9c66b22ee4584cd655fda57748ce186b85f829a092c28209478efbe86a92"
+        else "0x590e9c66b22ee4584cd655fda57748ce186b85f829a092c28209478efbe86a92"
     )
 
     assert hash_message(msg).hex() == (

@@ -181,6 +181,6 @@ class EIP712Message(EIP712Type):
         # TODO: Somehow cast to `eth_account.messages.SignableMessage`
         return SignableMessage(
             HexBytes(b"\x01"),
-            hash_domain(self._domain_),
-            hash_eip712_message(self._body_),
+            HexBytes(hash_domain(self._domain_)),
+            HexBytes(hash_eip712_message(self._body_)),
         )
