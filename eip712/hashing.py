@@ -7,6 +7,7 @@ from operator import itemgetter
 from eth_abi import encode, is_encodable, is_encodable_type
 from eth_abi.grammar import parse
 from eth_utils import keccak, to_tuple
+from hexbytes import HexBytes
 
 from .validation import validate_structured_data
 
@@ -81,7 +82,7 @@ def encode_type(primary_type, types):
 
 
 def hash_struct_type(primary_type, types):
-    return keccak(text=encode_type(primary_type, types))
+    return HexBytes(keccak(text=encode_type(primary_type, types)))
 
 
 def is_array_type(type):
@@ -221,14 +222,18 @@ def load_and_validate_structured_message(structured_json_string_data):
 
 
 def hash_domain(structured_data):
-    return keccak(encode_data("EIP712Domain", structured_data["types"], structured_data["domain"]))
+    return HexBytes(
+        keccak(encode_data("EIP712Domain", structured_data["types"], structured_data["domain"]))
+    )
 
 
 def hash_message(structured_data):
-    return keccak(
-        encode_data(
-            structured_data["primaryType"],
-            structured_data["types"],
-            structured_data["message"],
+    return HexBytes(
+        keccak(
+            encode_data(
+                structured_data["primaryType"],
+                structured_data["types"],
+                structured_data["message"],
+            )
         )
     )

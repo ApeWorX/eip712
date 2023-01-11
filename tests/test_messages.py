@@ -62,7 +62,7 @@ def test_gnosis_safe_tx(version):
     )
 
     assert hash_message(msg).hex() == (
-        "52307871756d6c59b490297be3f13178c9b61c57560fd37de628733ac673769e"
+        "0x52307871756d6c59b490297be3f13178c9b61c57560fd37de628733ac673769e"
         if version in ("1.3.0",)
-        else "70ae0b149c9dd8329c0234dbcb63993d350450049fdfd3d1c9ce19a93cc5afa5"
+        else "0x70ae0b149c9dd8329c0234dbcb63993d350450049fdfd3d1c9ce19a93cc5afa5"
     )
