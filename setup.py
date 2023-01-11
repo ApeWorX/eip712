@@ -68,7 +68,7 @@ setup(
         "dataclassy>=0.8.2,<1",
         "eth-utils>=2.1.0,<3",
         "eth-abi>=3.0.1,<4",
-        "eth-typing>=3.2,<4",
+        "eth-typing>=2.3.0,<4",
         "hexbytes>=0.3.0,<1",
         "pycryptodome>=3.16.0,<4",
     ],
