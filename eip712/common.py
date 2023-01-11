@@ -52,28 +52,28 @@ def create_permit_def(eip=2612, **header_fields):
 class SafeTxV1(EIP712Message):
     # NOTE: Subclass this as `SafeTx` w/ at least one header field
     to: "address"  # type: ignore
-    value: "uint256"  # type: ignore
-    data: "bytes"  # type: ignore
-    operation: "uint8"  # type: ignore
-    safeTxGas: "uint256"  # type: ignore
-    dataGas: "uint256"  # type: ignore
-    gasPrice: "uint256"  # type: ignore
-    gasToken: "address"  # type: ignore
-    refundReceiver: "address"  # type: ignore
+    value: "uint256" = 0  # type: ignore
+    data: "bytes" = b""  # type: ignore
+    operation: "uint8" = 0  # type: ignore
+    safeTxGas: "uint256" = 0  # type: ignore
+    dataGas: "uint256" = 0  # type: ignore
+    gasPrice: "uint256" = 0  # type: ignore
+    gasToken: "address" = "0x0000000000000000000000000000000000000000"  # type: ignore
+    refundReceiver: "address" = "0x0000000000000000000000000000000000000000"  # type: ignore
     nonce: "uint256"  # type: ignore
 
 
 class SafeTxV2(EIP712Message):
     # NOTE: Subclass this as `SafeTx` w/ at least one header field
     to: "address"  # type: ignore
-    value: "uint256"  # type: ignore
-    data: "bytes"  # type: ignore
-    operation: "uint8"  # type: ignore
-    safeTxGas: "uint256"  # type: ignore
-    baseGas: "uint256"  # type: ignore
-    gasPrice: "uint256"  # type: ignore
-    gasToken: "address"  # type: ignore
-    refundReceiver: "address"  # type: ignore
+    value: "uint256" = 0  # type: ignore
+    data: "bytes" = b""  # type: ignore
+    operation: "uint8" = 0  # type: ignore
+    safeTxGas: "uint256" = 0  # type: ignore
+    baseGas: "uint256" = 0  # type: ignore
+    gasPrice: "uint256" = 0  # type: ignore
+    gasToken: "address" = "0x0000000000000000000000000000000000000000"  # type: ignore
+    refundReceiver: "address" = "0x0000000000000000000000000000000000000000"  # type: ignore
     nonce: "uint256"  # type: ignore
 
 

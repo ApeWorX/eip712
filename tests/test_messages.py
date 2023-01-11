@@ -53,7 +53,7 @@ def test_gnosis_safe_tx(version):
         chain_id=1,
     )
 
-    msg = tx_def(MSIG_ADDRESS, 0, b"", 0, 0, 0, 0, MSIG_ADDRESS, MSIG_ADDRESS, 0)
+    msg = tx_def(to=MSIG_ADDRESS, nonce=0)
 
     assert msg.signable_message.header.hex() == (
         "0x88fbc465dedd7fe71b7baef26a1f46cdaadd50b95c77cbe88569195a9fe589ab"
@@ -62,7 +62,7 @@ def test_gnosis_safe_tx(version):
     )
 
     assert hash_message(msg).hex() == (
-        "0x52307871756d6c59b490297be3f13178c9b61c57560fd37de628733ac673769e"
+        "0x3c2fdf2ea8af328a67825162e7686000787c5cc9f4b27cb6bfbcaa445b59e2c4"
         if version in ("1.3.0",)
-        else "0x70ae0b149c9dd8329c0234dbcb63993d350450049fdfd3d1c9ce19a93cc5afa5"
+        else "0x1b393826bed1f2297ffc01916f8339892f9a51dc7f35f477b9a5cdd651d28603"
     )
