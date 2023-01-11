@@ -41,10 +41,10 @@ class Person(EIP712Type):
 
 
 class Mail(EIP712Message):
-    _chainId_: "uint256" = 1
-    _name_: "string" = "Ether Mail"
-    _verifyingContract_: "address" = "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
-    _version_: "string" = "1"
+    _chainId_ = 1
+    _name_ = "Ether Mail"
+    _verifyingContract_ = "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+    _version_ = "1"
 
     sender: Person
     receiver: Person
