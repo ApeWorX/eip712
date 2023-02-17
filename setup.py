@@ -25,14 +25,13 @@ extras_require = {
         "twine",  # Package upload tool
     ],
     "doc": [
-        "myst-parser>=0.17.0,<0.18",  # Tools for parsing markdown files in the docs
-        "sphinx-click>=3.1.0,<4.0",  # For documenting CLI
-        "Sphinx>=4.4.0,<5.0",  # Documentation generator
-        "sphinx_rtd_theme>=1.0.0,<2",  # Readthedocs.org theme
+        "myst-parser>=0.18.1,<0.19",  # Tools for parsing markdown files in the docs
+        "Sphinx>=5.3.0,<6.0",  # Documentation generator
+        "sphinx_rtd_theme>=1.2.0,<2",  # Readthedocs.org theme
         "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
     ],
     "dev": [
-        "commitizen>=2.19,<2.20",  # Manage commits and publishing releases
+        "commitizen>=2.42,<3.0",  # Manage commits and publishing releases
         "pre-commit",  # Ensure that linters are run prior to commiting
         "pytest-watch",  # `ptw` test watcher/runner
         "IPython",  # Console for interacting
