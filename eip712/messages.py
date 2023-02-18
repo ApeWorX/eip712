@@ -2,16 +2,13 @@
 Message classes for typed structured data hashing and signing in Ethereum.
 """
 
-from typing import Any, Dict, NamedTuple, Optional
+from typing import Any, Dict, Optional
 
 from dataclassy import dataclass, fields
 from eth_abi import is_encodable_type
-from eth_typing import Hash32
-from eth_utils.curried import ValidationError, keccak
+from eth_account.messages import SignableMessage, hash_domain, hash_eip712_message
+from eth_utils.curried import ValidationError
 from hexbytes import HexBytes
-
-from eip712.hashing import hash_domain
-from eip712.hashing import hash_message as hash_eip712_message
 
 # ! Do not change the order of the fields in this list !
 # To correctly encode and hash the domain fields, they
@@ -30,42 +27,6 @@ EIP712_BODY_FIELDS = [
     "domain",
     "message",
 ]
-
-
-# https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L39
-class SignableMessage(NamedTuple):
-    """
-    These are the components of an `EIP-191 <https://eips.ethereum.org/EIPS/eip-191>`__
-    signable message. Other message formats can be encoded into this format for easy signing.
-    This data structure doesn't need to know about the original message format.
-
-    In typical usage, you should never need to create these by hand. Instead, use
-    one of the available encode_* methods in this module, like:
-
-        - :meth:`encode_structured_data`
-        - :meth:`encode_intended_validator`
-        - :meth:`encode_structured_data`
-    """
-
-    version: bytes  # must be length 1
-    header: bytes  # aka "version specific data"
-    body: bytes  # aka "data to sign"
-
-
-# https://github.com/ethereum/eth-account/blob/f1d38e0/eth_account/messages.py#L59
-def _hash_eip191_message(signable_message: SignableMessage) -> Hash32:
-    """
-    Hash the given ``signable_message`` according to the EIP-191 Signed Data Standard.
-    """
-    version = signable_message.version
-    if len(version) != 1:
-        raise ValidationError(
-            "The supplied message version is {version!r}. "
-            "The EIP-191 signable message standard only supports one-byte versions."
-        )
-
-    joined = b"\x19" + version + signable_message.header + signable_message.body
-    return Hash32(keccak(joined))
 
 
 @dataclass(iter=True, slots=True, kwargs=True, kw_only=True)
@@ -178,7 +139,6 @@ class EIP712Message(EIP712Type):
     @property
     def signable_message(self) -> SignableMessage:
         """The current message as a :class:`SignableMessage` named tuple instance."""
-        # TODO: Somehow cast to `eth_account.messages.SignableMessage`
         return SignableMessage(
             HexBytes(b"\x01"),
             HexBytes(hash_domain(self._domain_)),

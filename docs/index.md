@@ -15,8 +15,6 @@
    :maxdepth: 2
 
    methoddocs/common.md
-   methoddocs/hashing.md
    methoddocs/messages.md
-   methoddocs/validation.md
 
 ```

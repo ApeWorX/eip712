@@ -1,8 +1,8 @@
 import pytest
+from eth_account.messages import ValidationError
+from eth_account.messages import hash_eip712_message as hash_message
 
 from eip712.common import SAFE_VERSIONS, create_safe_tx_def
-from eip712.hashing import hash_message
-from eip712.messages import ValidationError
 
 from .conftest import (
     InvalidMessageMissingDomainFields,
@@ -62,7 +62,7 @@ def test_gnosis_safe_tx(version):
     )
 
     assert hash_message(msg).hex() == (
-        "0x3c2fdf2ea8af328a67825162e7686000787c5cc9f4b27cb6bfbcaa445b59e2c4"
+        "3c2fdf2ea8af328a67825162e7686000787c5cc9f4b27cb6bfbcaa445b59e2c4"
         if version in ("1.3.0",)
-        else "0x1b393826bed1f2297ffc01916f8339892f9a51dc7f35f477b9a5cdd651d28603"
+        else "1b393826bed1f2297ffc01916f8339892f9a51dc7f35f477b9a5cdd651d28603"
     )
