@@ -68,7 +68,7 @@ def _hash_eip191_message(signable_message: SignableMessage) -> Hash32:
     return Hash32(keccak(joined))
 
 
-@dataclass(iter=True, slots=True)
+@dataclass(iter=True, slots=True, kwargs=True, kw_only=True)
 class EIP712Type:
     """
     Dataclass for `EIP-712 <https://eips.ethereum.org/EIPS/eip-712>`__ structured data types
