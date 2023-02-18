@@ -1,6 +1,7 @@
 import pytest
 from hexbytes import HexBytes
 
+from eip712.common import create_permit_def
 from eip712.messages import EIP712Message, EIP712Type
 
 PERMIT_NAME = "Yearn Vault"
@@ -20,48 +21,30 @@ class SubType(EIP712Type):
 
 
 class ValidMessageWithNameDomainField(EIP712Message):
-    _name_: "string" = "Valid Test Message"  # type: ignore
+    _name_ = "Valid Test Message"
     value: "uint256"  # type: ignore
     default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore
     sub: SubType
 
 
 class MessageWithNonCanonicalDomainFieldOrder(EIP712Message):
-    _name_: "string" = PERMIT_NAME  # type: ignore
-    _salt_: "bytes32" = PERMIT_SALT  # type: ignore
-    _chainId_: "uint256" = PERMIT_CHAIN_ID  # type: ignore
-    _version_: "string" = PERMIT_VERSION  # type: ignore
-    _verifyingContract_: "address" = PERMIT_VAULT_ADDRESS  # type: ignore
+    _name_ = PERMIT_NAME
+    _salt_ = PERMIT_SALT
+    _chainId_ = PERMIT_CHAIN_ID
+    _version_ = PERMIT_VERSION
+    _verifyingContract_ = PERMIT_VAULT_ADDRESS
 
 
 class MessageWithCanonicalDomainFieldOrder(EIP712Message):
-    _name_: "string" = PERMIT_NAME  # type: ignore
-    _version_: "string" = PERMIT_VERSION  # type: ignore
-    _chainId_: "uint256" = PERMIT_CHAIN_ID  # type: ignore
-    _verifyingContract_: "address" = PERMIT_VAULT_ADDRESS  # type: ignore
-    _salt_: "bytes32" = PERMIT_SALT  # type: ignore
-
-
-class MessageWithInvalidNameType(EIP712Message):
-    _name_: str = "Invalid Test Message"  # type: ignore
+    _name_ = PERMIT_NAME
+    _version_ = PERMIT_VERSION
+    _chainId_ = PERMIT_CHAIN_ID
+    _verifyingContract_ = PERMIT_VAULT_ADDRESS
+    _salt_ = PERMIT_SALT
 
 
 class InvalidMessageMissingDomainFields(EIP712Message):
     value: "uint256"  # type: ignore
-
-
-class Permit(EIP712Message):
-    _name_: "string" = PERMIT_NAME  # type: ignore
-    _version_: "string"  # type: ignore
-    _chainId_: "uint256"  # type: ignore
-    _verifyingContract_: "address"  # type: ignore
-    _salt_: "bytes32"  # type: ignore
-
-    owner: "address"  # type: ignore
-    spender: "address"  # type: ignore
-    value: "uint256"  # type: ignore
-    nonce: "uint256"  # type: ignore
-    deadline: "uint256"  # type: ignore
 
 
 @pytest.fixture
@@ -70,13 +53,19 @@ def valid_message_with_name_domain_field():
 
 
 @pytest.fixture
-def permit():
+def Permit():
+    return create_permit_def(
+        name=PERMIT_NAME,
+        version=PERMIT_VERSION,
+        chainId=PERMIT_CHAIN_ID,
+        verifyingContract=PERMIT_VAULT_ADDRESS,
+        salt=PERMIT_SALT,
+    )
+
+
+@pytest.fixture
+def permit(Permit):
     return Permit(
-        _name_=PERMIT_NAME,
-        _version_=PERMIT_VERSION,
-        _chainId_=PERMIT_CHAIN_ID,
-        _verifyingContract_=PERMIT_VAULT_ADDRESS,
-        _salt_=PERMIT_SALT,
         owner=PERMIT_OWNER_ADDRESS,
         spender=PERMIT_SPENDER_ADDRESS,
         value=PERMIT_ALLOWANCE,

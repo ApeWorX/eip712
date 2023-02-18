@@ -1,7 +1,7 @@
-# Validation
+# Common
 
 ```{eval-rst}
-.. automodule:: eip712.validation
+.. automodule:: eip712.common
     :members:
     :show-inheritance:
 ```

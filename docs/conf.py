@@ -24,7 +24,6 @@ copyright = "2021, ApeWorX LTD"
 author = "ApeWorX Team"
 extensions = [
     "myst_parser",
-    "sphinx_click",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
