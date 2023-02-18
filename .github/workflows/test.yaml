@@ -81,23 +81,22 @@ jobs:
         - name: Run Tests
           run: pytest -m "not fuzzing" -n 0 -s --cov
 
-# NOTE: uncomment this block after you've marked tests with @pytest.mark.fuzzing
-#    fuzzing:
-#        runs-on: ubuntu-latest
-#
-#        strategy:
-#            fail-fast: true
-#
-#        steps:
-#        - uses: actions/checkout@v3
-#
-#        - name: Setup Python
-#          uses: actions/setup-python@v4
-#          with:
-#              python-version: 3.8
-#
-#        - name: Install Dependencies
-#          run: pip install .[test]
-#
-#        - name: Run Tests
-#          run: pytest -m "fuzzing" --no-cov -s
+    fuzzing:
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: true
+
+        steps:
+        - uses: actions/checkout@v3
+
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+              python-version: 3.8
+
+        - name: Install Dependencies
+          run: pip install .[test]
+
+        - name: Run Tests
+          run: pytest -m "fuzzing" --no-cov -s
