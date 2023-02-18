@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quick Start &mdash; eip712  documentation</title>
@@ -20,7 +20,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/custom.js"></script>
   <script>
@@ -28,7 +30,7 @@
   </script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Messages" href="../methoddocs/messages.html" />
+    <link rel="next" title="Common" href="../methoddocs/common.html" />
     <link rel="prev" title="EIP712 Documentation" href="../index.html" /> 
 </head>
 
@@ -51,7 +53,7 @@
           </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,8 +75,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../methoddocs/common.html">Common</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../methoddocs/messages.html">Messages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../methoddocs/validation.html">Validation</a></li>
 </ul>
 
         </div>
@@ -91,7 +93,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Quick Start</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/userguides/quickstart.md.txt" rel="nofollow"> View page source</a>
@@ -103,26 +105,26 @@
            <div itemprop="articleBody">
              
   <section id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline"></a></h1>
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
 <p>Message classes for typed structured data hashing and signing in Ethereum.
 See <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-712">EIP-712</a> for details.</p>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline"></a></h2>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.python.org/downloads">python3</a> version 3.7.2 or greater, python3-dev</p></li>
 </ul>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
 <section id="via-pip">
-<h3>via <code class="docutils literal notranslate"><span class="pre">pip</span></code><a class="headerlink" href="#via-pip" title="Permalink to this headline"></a></h3>
+<h3>via <code class="docutils literal notranslate"><span class="pre">pip</span></code><a class="headerlink" href="#via-pip" title="Permalink to this heading"></a></h3>
 <p>You can install the latest release via <a class="reference external" href="https://pypi.org/project/pip/"><code class="docutils literal notranslate"><span class="pre">pip</span></code></a>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>eip712
 </pre></div>
 </div>
 </section>
 <section id="via-setuptools">
-<h3>via <code class="docutils literal notranslate"><span class="pre">setuptools</span></code><a class="headerlink" href="#via-setuptools" title="Permalink to this headline"></a></h3>
+<h3>via <code class="docutils literal notranslate"><span class="pre">setuptools</span></code><a class="headerlink" href="#via-setuptools" title="Permalink to this heading"></a></h3>
 <p>You can clone the repository and use <a class="reference external" href="https://github.com/pypa/setuptools"><code class="docutils literal notranslate"><span class="pre">setuptools</span></code></a> for the most up-to-date version:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ApeWorX/eip712.git
 <span class="nb">cd</span><span class="w"> </span>eip712
@@ -132,7 +134,7 @@ python3<span class="w"> </span>setup.py<span class="w"> </span>install
 </section>
 </section>
 <section id="quick-usage">
-<h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Permalink to this headline"></a></h2>
+<h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Permalink to this heading"></a></h2>
 <p>Define EIP-712 models:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eip712.messages</span> <span class="kn">import</span> <span class="n">EIP712Message</span><span class="p">,</span> <span class="n">EIP712Type</span>
 
@@ -143,10 +145,10 @@ python3<span class="w"> </span>setup.py<span class="w"> </span>install
 
 
 <span class="k">class</span> <span class="nc">Mail</span><span class="p">(</span><span class="n">EIP712Message</span><span class="p">):</span>
-    <span class="n">_chainId_</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">_name_</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span> <span class="o">=</span> <span class="s2">&quot;Ether Mail&quot;</span>
-    <span class="n">_verifyingContract_</span><span class="p">:</span> <span class="s2">&quot;address&quot;</span> <span class="o">=</span> <span class="s2">&quot;0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC&quot;</span>
-    <span class="n">_version_</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+    <span class="n">_chainId_</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">_name_</span> <span class="o">=</span> <span class="s2">&quot;Ether Mail&quot;</span>
+    <span class="n">_verifyingContract_</span> <span class="o">=</span> <span class="s2">&quot;0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC&quot;</span>
+    <span class="n">_version_</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
 
     <span class="n">sender</span><span class="p">:</span> <span class="n">Person</span>
     <span class="n">receiver</span><span class="p">:</span> <span class="n">Person</span>
@@ -160,7 +162,7 @@ python3<span class="w"> </span>setup.py<span class="w"> </span>install
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="EIP712 Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../methoddocs/messages.html" class="btn btn-neutral float-right" title="Messages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../methoddocs/common.html" class="btn btn-neutral float-right" title="Common" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

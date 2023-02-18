@@ -5,8 +5,8 @@
    :caption: User Guides
    :maxdepth: 1
 
-   userguides/quickstart 
-   
+   userguides/quickstart
+
 ```
 
 ```{eval-rst}
@@ -14,7 +14,7 @@
    :caption: Python Reference
    :maxdepth: 2
 
+   methoddocs/common.md
    methoddocs/messages.md
-   methoddocs/validation.md
 
 ```

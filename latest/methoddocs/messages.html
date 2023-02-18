@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Messages &mdash; eip712  documentation</title>
@@ -20,7 +20,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/custom.js"></script>
   <script>
@@ -28,8 +30,7 @@
   </script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Validation" href="validation.html" />
-    <link rel="prev" title="Quick Start" href="../userguides/quickstart.html" /> 
+    <link rel="prev" title="Common" href="common.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,7 +52,7 @@
           </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -64,8 +65,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Messages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="validation.html">Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="common.html">Common</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Messages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#eip712.messages.EIP712Message"><code class="docutils literal notranslate"><span class="pre">EIP712Message</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#eip712.messages.EIP712Message.signable_message"><code class="docutils literal notranslate"><span class="pre">EIP712Message.signable_message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#eip712.messages.EIP712Type"><code class="docutils literal notranslate"><span class="pre">EIP712Type</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -82,7 +90,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Messages</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/methoddocs/messages.md.txt" rel="nofollow"> View page source</a>
@@ -94,55 +102,18 @@
            <div itemprop="articleBody">
              
   <section id="module-eip712.messages">
-<span id="messages"></span><h1>Messages<a class="headerlink" href="#module-eip712.messages" title="Permalink to this headline"></a></h1>
+<span id="messages"></span><h1>Messages<a class="headerlink" href="#module-eip712.messages" title="Permalink to this heading"></a></h1>
 <p>Message classes for typed structured data hashing and signing in Ethereum.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="eip712.messages.EIP712Message">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eip712.messages.</span></span><span class="sig-name descname"><span class="pre">EIP712Message</span></span><a class="headerlink" href="#eip712.messages.EIP712Message" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#eip712.messages.EIP712Type" title="eip712.messages.EIP712Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">eip712.messages.EIP712Type</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eip712.messages.</span></span><span class="sig-name descname"><span class="pre">EIP712Message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_name_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_version_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_chainId_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_verifyingContract_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_salt_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.messages.EIP712Message" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eip712.messages.EIP712Type" title="eip712.messages.EIP712Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">EIP712Type</span></code></a></p>
 <p>Container for EIP-712 messages with type information, domain separator
 parameters, and the message object.</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Message.body">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">body</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.body" title="Permalink to this definition"></a></dt>
-<dd><p>The hash of the EIP-712 message (<code class="docutils literal notranslate"><span class="pre">body_data</span></code>).</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Message.body_data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">body_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.body_data" title="Permalink to this definition"></a></dt>
-<dd><p>The EIP-712 structured message to be used for serialization and hashing.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Message.domain">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.domain" title="Permalink to this definition"></a></dt>
-<dd><p>The EIP-712 domain fields (built using <code class="docutils literal notranslate"><span class="pre">HEADER_FIELDS</span></code>).</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Message.domain_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">domain_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.domain_type" title="Permalink to this definition"></a></dt>
-<dd><p>The EIP-712 domain structure to be used for serialization.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Message.header">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">header</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.header" title="Permalink to this definition"></a></dt>
-<dd><p>The EIP-712 message header.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="eip712.messages.EIP712Message.signable_message">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signable_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#eip712.messages.SignableMessage" title="eip712.messages.SignableMessage"><span class="pre">eip712.messages.SignableMessage</span></a></em><a class="headerlink" href="#eip712.messages.EIP712Message.signable_message" title="Permalink to this definition"></a></dt>
-<dd><p>The current message as a <a class="reference internal" href="#eip712.messages.SignableMessage" title="eip712.messages.SignableMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SignableMessage</span></code></a> named tuple instance.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Message.version">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.version" title="Permalink to this definition"></a></dt>
-<dd><p>The current major version of the signing domain. Signatures from
-different versions are not compatible.</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signable_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SignableMessage</span></em><a class="headerlink" href="#eip712.messages.EIP712Message.signable_message" title="Permalink to this definition"></a></dt>
+<dd><p>The current message as a <code class="xref py py-class docutils literal notranslate"><span class="pre">SignableMessage</span></code> named tuple instance.</p>
 </dd></dl>
 
 </dd></dl>
@@ -153,64 +124,6 @@ different versions are not compatible.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Dataclass for <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-712">EIP-712</a> structured data types
 (i.e. the contents of an <a class="reference internal" href="#eip712.messages.EIP712Message" title="eip712.messages.EIP712Message"><code class="xref py py-class docutils literal notranslate"><span class="pre">EIP712Message</span></code></a>).</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Type.data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#eip712.messages.EIP712Type.data" title="Permalink to this definition"></a></dt>
-<dd><p>Recursively built <code class="docutils literal notranslate"><span class="pre">dict</span></code> of the underlying data, to be used for
-serialization.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Type.field_type">
-<span class="sig-name descname"><span class="pre">field_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eip712.messages.EIP712Type.field_type" title="Permalink to this definition"></a></dt>
-<dd><p>Looks up <code class="docutils literal notranslate"><span class="pre">field</span></code> via type annotations, returning the underlying ABI
-type (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;uint256&quot;</span></code>) or <a class="reference internal" href="#eip712.messages.EIP712Type" title="eip712.messages.EIP712Type"><code class="xref py py-class docutils literal notranslate"><span class="pre">EIP712Type</span></code></a>. Raises <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>
-if the field doesn’t exist.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="eip712.messages.EIP712Type.types">
-<span class="sig-name descname"><span class="pre">types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#eip712.messages.EIP712Type.types" title="Permalink to this definition"></a></dt>
-<dd><p>Recursively built <code class="docutils literal notranslate"><span class="pre">dict</span></code> (name of type <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> list of subtypes) of
-the underlying fields’ types.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="eip712.messages.SignableMessage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eip712.messages.</span></span><span class="sig-name descname"><span class="pre">SignableMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eip712.messages.SignableMessage" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>These are the components of an <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-191">EIP-191</a>
-signable message. Other message formats can be encoded into this format for easy signing.
-This data structure doesn’t need to know about the original message format.</p>
-<p>In typical usage, you should never need to create these by hand. Instead, use
-one of the available encode_* methods in this module, like:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_structured_data()</span></code></p></li>
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_intended_validator()</span></code></p></li>
-<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">encode_structured_data()</span></code></p></li>
-</ul>
-</div></blockquote>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="eip712.messages.SignableMessage.body">
-<span class="sig-name descname"><span class="pre">body</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#eip712.messages.SignableMessage.body" title="Permalink to this definition"></a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="eip712.messages.SignableMessage.header">
-<span class="sig-name descname"><span class="pre">header</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#eip712.messages.SignableMessage.header" title="Permalink to this definition"></a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="eip712.messages.SignableMessage.version">
-<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#eip712.messages.SignableMessage.version" title="Permalink to this definition"></a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -219,8 +132,7 @@ one of the available encode_* methods in this module, like:</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../userguides/quickstart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="validation.html" class="btn btn-neutral float-right" title="Validation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="common.html" class="btn btn-neutral float-left" title="Common" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
