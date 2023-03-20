@@ -25,13 +25,14 @@ extras_require = {
         "twine",  # Package upload tool
     ],
     "doc": [
-        "myst-parser>=0.18.1,<0.19",  # Tools for parsing markdown files in the docs
-        "Sphinx>=5.3.0,<6.0",  # Documentation generator
-        "sphinx_rtd_theme>=1.2.0,<2",  # Readthedocs.org theme
+        "myst-parser>=0.17.0,<0.18",  # Tools for parsing markdown files in the docs
+        "sphinx-click>=3.1.0,<4.0",  # For documenting CLI
+        "Sphinx>=4.4.0,<5.0",  # Documentation generator
+        "sphinx_rtd_theme>=1.0.0,<2",  # Readthedocs.org theme
         "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
     ],
     "dev": [
-        "commitizen>=2.42,<3.0",  # Manage commits and publishing releases
+        "commitizen>=2.19,<2.20",  # Manage commits and publishing releases
         "pre-commit",  # Ensure that linters are run prior to commiting
         "pytest-watch",  # `ptw` test watcher/runner
         "IPython",  # Console for interacting
@@ -65,12 +66,12 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1",
-        "eth-abi>=2.2.0,<4",
-        "eth-account>0.4.0,<1.0.0",
-        "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
-        "eth-typing>=2.3,<4",
-        "eth-utils>=1.9.5,<3",
+        "eth-utils>=2.1.0,<3",
+        "eth-abi==4.0.0b2",
+        "eth-typing>=3.3.0,<4",
+        "eth-account>=0.8.0,<0.9",
         "hexbytes>=0.3.0,<1",
+        "pycryptodome>=3.16.0,<4",
     ],
     python_requires=">=3.8,<4",
     extras_require=extras_require,
