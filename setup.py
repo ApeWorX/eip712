@@ -14,8 +14,8 @@ extras_require = {
         "mypy>=1.1.1,<2",  # Static type analyzer
         "types-setuptools",  # Needed for mypy type shed
         "flake8>=6.0.0,<7",  # Style linter
-        "isort>=5.12.0",  # Import sorting linter
-        "mdformat>=0.7.16",  # Auto-formatter for markdown
+        "isort>=5.12.0,<6",  # Import sorting linter
+        "mdformat>=0.7.16,<0.8",  # Auto-formatter for markdown
         "mdformat-gfm>=0.3.5",  # Needed for formatting GitHub-flavored markdown
         "mdformat-frontmatter>=0.4.1",  # Needed for frontmatters-style headers in issue templates
     ],
