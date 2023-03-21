@@ -27,7 +27,7 @@ extras_require = {
     "doc": [
         "myst-parser>=0.18.1,<0.19",  # Tools for parsing markdown files in the docs
         "Sphinx>=5.3.0,<6.0",  # Documentation generator
-        "sphinx_rtd_theme>=1.0.0,<2",  # Readthedocs.org theme
+        "sphinx_rtd_theme>=1.2.0,<2",  # Readthedocs.org theme
         "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
     ],
     "dev": [
@@ -65,7 +65,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1",
-        "eth-abi==4.0.0b2",
+        "eth-abi==4.0.0b3",
         "eth-account>=0.8.0,<0.9",
         "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
         "eth-typing>=3.3.0,<4",
