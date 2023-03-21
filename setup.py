@@ -17,7 +17,7 @@ extras_require = {
         "isort>=5.12.0,<6",  # Import sorting linter
         "mdformat>=0.7.16,<0.8",  # Auto-formatter for markdown
         "mdformat-gfm>=0.3.5,<0.4",  # Needed for formatting GitHub-flavored markdown
-        "mdformat-frontmatter>=0.4.1,<0.5",  # Needed for frontmatters-style headers in issue templates
+        "mdformat-frontmatter>=0.4.1,<0.5",  # Needed for headers in GH issue templates
     ],
     "release": [  # `release` GitHub Action job uses this
         "setuptools",  # Installation tool
