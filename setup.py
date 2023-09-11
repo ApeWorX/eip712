@@ -4,20 +4,20 @@ from setuptools import find_packages, setup
 
 extras_require = {
     "test": [  # `test` GitHub Action jobs uses this
-        "pytest>=6.0",  # Core testing package
+        "pytest>=6.0,<8",  # Core testing package
         "pytest-xdist",  # multi-process runner
         "pytest-cov",  # Coverage analyzer plugin
-        "hypothesis>=6.2.0,<7.0",  # Strategy-based fuzzer
+        "hypothesis>=6.70.0,<7",  # Strategy-based fuzzer
     ],
     "lint": [
-        "black>=23.3.0",  # auto-formatter and linter
-        "mypy>=0.991",  # Static type analyzer
+        "black>=23.7.0,<24",  # auto-formatter and linter
+        "mypy>=1.5.1,<2",  # Static type analyzer
         "types-setuptools",  # Needed for mypy type shed
-        "flake8>=6.0.0",  # Style linter
-        "isort>=5.10.1",  # Import sorting linter
-        "mdformat>=0.7.16",  # Auto-formatter for markdown
-        "mdformat-gfm>=0.3.5",  # Needed for formatting GitHub-flavored markdown
-        "mdformat-frontmatter>=0.4.1",  # Needed for frontmatters-style headers in issue templates
+        "flake8>=6.0.0,<7",  # Style linter
+        "isort>=5.12.0,<6",  # Import sorting linter
+        "mdformat>=0.7.16,<0.8",  # Auto-formatter for markdown
+        "mdformat-gfm>=0.3.5,<0.4",  # Needed for formatting GitHub-flavored markdown
+        "mdformat-frontmatter>=0.4.1,<0.5",  # Needed for headers in GH issue templates
     ],
     "release": [  # `release` GitHub Action job uses this
         "setuptools",  # Installation tool
@@ -26,13 +26,13 @@ extras_require = {
     ],
     "doc": [
         "myst-parser>=0.18.1,<0.19",  # Tools for parsing markdown files in the docs
-        "Sphinx>=5.3.0,<6.0",  # Documentation generator
+        "Sphinx>=5.3.0,<6",  # Documentation generator
         "sphinx_rtd_theme>=1.2.0,<2",  # Readthedocs.org theme
         "sphinxcontrib-napoleon>=0.7",  # Allow Google-style documentation
     ],
     "dev": [
-        "commitizen>=2.42,<3.0",  # Manage commits and publishing releases
-        "pre-commit",  # Ensure that linters are run prior to commiting
+        "commitizen>=2.42,<3",  # Manage commits and publishing releases
+        "pre-commit",  # Ensure that linters are run prior to committing
         "pytest-watch",  # `ptw` test watcher/runner
         "IPython",  # Console for interacting
         "ipdb",  # Debugger (Must use `export PYTHONBREAKPOINT=ipdb.set_trace`)
@@ -65,11 +65,11 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1",
-        "eth-abi>=2.2.0,<4",
-        "eth-account>0.4.0,<1.0.0",
+        "eth-abi>=4.1.0,<5",
+        "eth-account>=0.8.0,<0.9",
         "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
-        "eth-typing>=2.3,<4",
-        "eth-utils>=1.9.5,<3",
+        "eth-typing>=3.3.0,<4",
+        "eth-utils>=2.1.0,<3",
         "hexbytes>=0.3.0,<1",
     ],
     python_requires=">=3.8,<4",
@@ -91,5 +91,6 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )

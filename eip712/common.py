@@ -53,7 +53,7 @@ class SafeTxV1(EIP712Message):
     # NOTE: Subclass this as `SafeTx` w/ at least one header field
     to: "address"  # type: ignore
     value: "uint256" = 0  # type: ignore
-    data: "bytes" = b""  # type: ignore
+    data: "bytes" = b""
     operation: "uint8" = 0  # type: ignore
     safeTxGas: "uint256" = 0  # type: ignore
     dataGas: "uint256" = 0  # type: ignore
@@ -67,7 +67,7 @@ class SafeTxV2(EIP712Message):
     # NOTE: Subclass this as `SafeTx` w/ at least one header field
     to: "address"  # type: ignore
     value: "uint256" = 0  # type: ignore
-    data: "bytes" = b""  # type: ignore
+    data: "bytes" = b""
     operation: "uint8" = 0  # type: ignore
     safeTxGas: "uint256" = 0  # type: ignore
     baseGas: "uint256" = 0  # type: ignore

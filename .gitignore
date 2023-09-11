@@ -117,5 +117,5 @@ dmypy.json
 # setuptools-scm
 version.py
 
-# Ape stuff
+# Ape projects
 .build/
