@@ -49,3 +49,7 @@ class Mail(EIP712Message):
     sender: Person
     receiver: Person
 ```
+
+# Initialize a Person object as you would normally
+
+person = Person(name="Joe", wallet="0xa27CEF8aF2B6575903b676e5644657FAe96F491F")
