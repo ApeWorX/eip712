@@ -149,10 +149,6 @@ class EIP712Message(EIP712Type):
             HexBytes(hash_eip712_message(self._body_)),
         )
 
-    @property
-    def eip712_hash(self) -> HexBytes:
-        """
-        The hash of the fully encoded EIP-712 ``value`` for ``types`` with ``domain``.
-        Inspired from Safe Wallet's transaction hash calculation.
-        """
-        return HexBytes(keccak(b"".join([bytes.fromhex("19"), *self.signable_message])))
+
+def calculate_hash(msg: SignableMessage) -> HexBytes:
+    return HexBytes(keccak(b"".join([bytes.fromhex("19"), *msg])))

@@ -3,6 +3,7 @@ from eth_account._utils.structured_data.hashing import hash_message
 from hexbytes import HexBytes
 
 from eip712.common import SAFE_VERSIONS, create_safe_tx_def
+from eip712.messages import calculate_hash
 
 MAINNET_MSIG_ADDRESS = "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52"
 GOERLI_MSIG_ADDRESS = "0x3c59eC3912A6A0c8690ec548D87FB55C3Ba62aBa"
@@ -45,6 +46,6 @@ def test_gnosis_goerli_safe_tx():
         nonce=0,
         value=1_000_000_000_000_000_000,
     )
-    actual = msg.eip712_hash
+    actual = calculate_hash(msg.signable_message)
     expected = HexBytes("0xbbb1cbed7c3679b5d5764df26af8fab1b15f3a15c084db9082dffb3624ca74ee")
     assert actual == expected
