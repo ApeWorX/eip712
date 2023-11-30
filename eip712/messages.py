@@ -141,11 +141,11 @@ class EIP712Message(EIP712Type):
     def signable_message(self) -> SignableMessage:
         """The current message as a :class:`SignableMessage` named tuple instance."""
         return SignableMessage(
-            HexBytes(bytes.fromhex("1901")),
+            HexBytes(1),
             HexBytes(hash_domain(self._domain_)),
             HexBytes(hash_eip712_message(self._body_)),
         )
 
     @property
     def message_hash(self) -> HexBytes:
-        return HexBytes(keccak(b"".join(self.signable_message)))
+        return HexBytes(keccak(b"".join([bytes.fromhex("19"), *self.signable_message])))
