@@ -45,6 +45,6 @@ def test_gnosis_goerli_safe_tx():
         nonce=0,
         value=1_000_000_000_000_000_000,
     )
-    actual = msg.message_hash
+    actual = msg.eip712_hash
     expected = HexBytes("0xbbb1cbed7c3679b5d5764df26af8fab1b15f3a15c084db9082dffb3624ca74ee")
     assert actual == expected
