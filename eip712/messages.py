@@ -1,12 +1,12 @@
 """
 Message classes for typed structured data hashing and signing in Ethereum.
 """
-
 from typing import Any, Dict, Optional
 
 from dataclassy import dataclass, fields
 from eth_abi import is_encodable_type
 from eth_account.messages import SignableMessage, hash_domain, hash_eip712_message
+from eth_utils import keccak
 from eth_utils.curried import ValidationError
 from hexbytes import HexBytes
 
@@ -119,6 +119,7 @@ class EIP712Message(EIP712Type):
     @property
     def _body_(self) -> dict:
         """The EIP-712 structured message to be used for serialization and hashing."""
+
         return {
             "domain": self._domain_["domain"],
             "types": dict(self._types_, **self._domain_["types"]),
@@ -140,7 +141,11 @@ class EIP712Message(EIP712Type):
     def signable_message(self) -> SignableMessage:
         """The current message as a :class:`SignableMessage` named tuple instance."""
         return SignableMessage(
-            HexBytes(b"\x01"),
+            HexBytes(bytes.fromhex("1901")),
             HexBytes(hash_domain(self._domain_)),
             HexBytes(hash_eip712_message(self._body_)),
         )
+
+    @property
+    def message_hash(self) -> HexBytes:
+        return HexBytes(keccak(b"".join(self.signable_message)))
