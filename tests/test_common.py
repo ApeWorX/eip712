@@ -1,5 +1,4 @@
 import pytest
-from ape import convert
 from eth_account._utils.structured_data.hashing import hash_message
 from hexbytes import HexBytes
 
@@ -44,7 +43,7 @@ def test_gnosis_goerli_safe_tx():
     msg = tx_def(
         to=receiver,
         nonce=0,
-        value=convert("1 ETH", int),
+        value=1_000_000_000_000_000_000,
     )
     actual = msg.message_hash
     expected = HexBytes("0xbbb1cbed7c3679b5d5764df26af8fab1b15f3a15c084db9082dffb3624ca74ee")
