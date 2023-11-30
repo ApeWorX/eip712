@@ -139,7 +139,10 @@ class EIP712Message(EIP712Type):
 
     @property
     def signable_message(self) -> SignableMessage:
-        """The current message as a :class:`SignableMessage` named tuple instance."""
+        """
+        The current message as a :class:`SignableMessage` named tuple instance.
+        **NOTE**: The 0x19 prefix is NOT included.
+        """
         return SignableMessage(
             HexBytes(1),
             HexBytes(hash_domain(self._domain_)),
