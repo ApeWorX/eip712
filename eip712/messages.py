@@ -3,7 +3,7 @@ Message classes for typed structured data hashing and signing in Ethereum.
 """
 from typing import Any, Dict, Optional
 
-from dataclassy import dataclass, fields
+from dataclassy import asdict, dataclass, fields
 from eth_abi import is_encodable_type
 from eth_account.messages import SignableMessage, hash_domain, hash_eip712_message
 from eth_utils import keccak
@@ -143,12 +143,30 @@ class EIP712Message(EIP712Type):
         The current message as a :class:`SignableMessage` named tuple instance.
         **NOTE**: The 0x19 prefix is NOT included.
         """
+        domain = _prepare_data_for_hashing(self._domain_["domain"])
+        types = _prepare_data_for_hashing(self._types_)
+        message = _prepare_data_for_hashing(self._body_["message"])
         return SignableMessage(
             HexBytes(1),
-            HexBytes(hash_domain(self._domain_["domain"])),
-            HexBytes(hash_eip712_message(self._types_, self._body_["message"])),
+            HexBytes(hash_domain(domain)),
+            HexBytes(hash_eip712_message(types, message)),
         )
 
 
 def calculate_hash(msg: SignableMessage) -> HexBytes:
     return HexBytes(keccak(b"".join([bytes.fromhex("19"), *msg])))
+
+
+def _prepare_data_for_hashing(data: Dict) -> Dict:
+    result: Dict = {}
+
+    for key, value in data.items():
+        item: Any = value
+        if isinstance(value, EIP712Type):
+            item = asdict(value)
+        elif isinstance(value, dict):
+            item = _prepare_data_for_hashing(item)
+
+        result[key] = item
+
+    return result
