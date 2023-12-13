@@ -10,12 +10,12 @@ extras_require = {
         "hypothesis>=6.70.0,<7",  # Strategy-based fuzzer
     ],
     "lint": [
-        "black>=23.7.0,<24",  # auto-formatter and linter
-        "mypy>=1.5.1,<2",  # Static type analyzer
+        "black>=23.12.0,<24",  # auto-formatter and linter
+        "mypy>=1.7.1,<2",  # Static type analyzer
         "types-setuptools",  # Needed for mypy type shed
-        "flake8>=6.0.0,<7",  # Style linter
+        "flake8>=6.1.0,<7",  # Style linter
         "isort>=5.12.0,<6",  # Import sorting linter
-        "mdformat>=0.7.16,<0.8",  # Auto-formatter for markdown
+        "mdformat>=0.7.17,<0.8",  # Auto-formatter for markdown
         "mdformat-gfm>=0.3.5,<0.4",  # Needed for formatting GitHub-flavored markdown
         "mdformat-frontmatter>=0.4.1,<0.5",  # Needed for headers in GH issue templates
     ],
@@ -65,11 +65,11 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1",
-        "eth-abi>=4.1.0,<5",
-        "eth-account>=0.8.0,<0.9",
+        "eth-abi>=4.2.1,<5",
+        "eth-account>=0.10.0,<0.11",
         "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
-        "eth-typing>=3.3.0,<4",
-        "eth-utils>=2.1.0,<3",
+        "eth-typing>=3.5.2,<4",
+        "eth-utils>=2.3.1,<3",
         "hexbytes>=0.3.0,<1",
     ],
     python_requires=">=3.8,<4",
