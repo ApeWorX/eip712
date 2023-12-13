@@ -145,8 +145,8 @@ class EIP712Message(EIP712Type):
         """
         return SignableMessage(
             HexBytes(1),
-            HexBytes(hash_domain(self._domain_)),
-            HexBytes(hash_eip712_message(self._body_)),
+            HexBytes(hash_domain(self._domain_["domain"])),
+            HexBytes(hash_eip712_message(self._types_, self._body_["message"])),
         )
 
 
