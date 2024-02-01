@@ -4,7 +4,7 @@ Message classes for typed structured data hashing and signing in Ethereum.
 from typing import Any, Dict, Optional
 
 from dataclassy import asdict, dataclass, fields
-from eth_abi import is_encodable_type
+from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
 from eth_account.messages import SignableMessage, hash_domain, hash_eip712_message
 from eth_utils import keccak
 from eth_utils.curried import ValidationError
