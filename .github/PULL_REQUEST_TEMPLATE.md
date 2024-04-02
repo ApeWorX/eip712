@@ -10,7 +10,8 @@ fixes: #
 
 ### Checklist
 
-- [ ] Passes all linting checks (pre-commit and CI jobs)
-- [ ] New test cases have been added and are passing
+<!-- All PRs must complete the following checklist before being merged -->
+
+- [ ] All changes are completed
+- [ ] New test cases have been added
 - [ ] Documentation has been updated
-- [ ] PR title follows [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) standard (will be automatically included in the changelog)
