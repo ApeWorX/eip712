@@ -1,7 +1,8 @@
 """
 Message classes for typed structured data hashing and signing in Ethereum.
 """
-from typing import Any, Dict, Optional
+
+from typing import Any, Optional
 
 from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
@@ -45,7 +46,7 @@ class EIP712Type:
         Recursively built ``dict`` (name of type ``->`` list of subtypes) of
         the underlying fields' types.
         """
-        types: Dict[str, list] = {repr(self): []}
+        types: dict[str, list] = {repr(self): []}
 
         for field in fields(self.__class__):
             value = getattr(self, field)
@@ -157,8 +158,8 @@ def calculate_hash(msg: SignableMessage) -> HexBytes:
     return HexBytes(keccak(b"".join([bytes.fromhex("19"), *msg])))
 
 
-def _prepare_data_for_hashing(data: Dict) -> Dict:
-    result: Dict = {}
+def _prepare_data_for_hashing(data: dict) -> dict:
+    result: dict = {}
 
     for key, value in data.items():
         item: Any = value
