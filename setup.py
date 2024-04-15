@@ -65,8 +65,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.8.2,<1",
-        "eth-abi>=4.2.1,<5",
-        "eth-account>=0.10.0",
+        "eth-abi>=5.1.0,<6",
+        "eth-account>=0.10.0,<0.11",
         "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
         "eth-typing>=3.5.2,<4",
         "eth-utils>=2.3.1,<3",
