@@ -66,11 +66,11 @@ setup(
     install_requires=[
         "dataclassy>=0.8.2,<1",
         "eth-abi>=5.1.0,<6",
-        "eth-account>=0.10.0,<0.12",
+        "eth-account>=0.12.0,<0.14",
         "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
         "eth-typing>=3.5.2,<4",
         "eth-utils>=2.3.1,<3",
-        "hexbytes>=0.3.0,<1",
+        "hexbytes>=1.2.0,<2",
     ],
     python_requires=">=3.8,<4",
     extras_require=extras_require,
