@@ -1,5 +1,4 @@
 import pytest
-from eth_account.messages import encode_typed_data, _hash_eip191_message
 from hexbytes import HexBytes
 
 from eip712.common import SAFE_VERSIONS, create_safe_tx_def
