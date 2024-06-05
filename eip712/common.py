@@ -85,7 +85,7 @@ def create_safe_tx_def(
     version: str = "1.3.0",
     contract_address: Optional[str] = None,
     chain_id: Optional[int] = None,
-) -> Type[SafeTx]:
+) -> type[SafeTx]:
     if not contract_address:
         raise ValueError("Must define 'contract_address'")
 
