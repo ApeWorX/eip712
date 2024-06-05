@@ -20,9 +20,9 @@ def test_gnosis_safe_tx(version):
     msg = tx_def(to=MAINNET_MSIG_ADDRESS, nonce=0)
 
     assert msg.signable_message.header.hex() == (
-        "0x88fbc465dedd7fe71b7baef26a1f46cdaadd50b95c77cbe88569195a9fe589ab"
+        "88fbc465dedd7fe71b7baef26a1f46cdaadd50b95c77cbe88569195a9fe589ab"
         if version in ("1.3.0",)
-        else "0x590e9c66b22ee4584cd655fda57748ce186b85f829a092c28209478efbe86a92"
+        else "590e9c66b22ee4584cd655fda57748ce186b85f829a092c28209478efbe86a92"
     )
 
     assert hash_message(msg).hex() == (

@@ -10,14 +10,15 @@ extras_require = {
         "hypothesis>=6.70.0,<7",  # Strategy-based fuzzer
     ],
     "lint": [
-        "black>=23.12.0,<24",  # auto-formatter and linter
-        "mypy>=1.7.1,<2",  # Static type analyzer
+        "black>=24.4.2,<25",  # auto-formatter and linter
+        "mypy>=1.10.0,<2",  # Static type analyzer
         "types-setuptools",  # Needed for mypy type shed
-        "flake8>=6.1.0,<7",  # Style linter
+        "flake8>=7.0.0,<8",  # Style linter
         "isort>=5.12.0,<6",  # Import sorting linter
         "mdformat>=0.7.17,<0.8",  # Auto-formatter for markdown
         "mdformat-gfm>=0.3.5,<0.4",  # Needed for formatting GitHub-flavored markdown
         "mdformat-frontmatter>=0.4.1,<0.5",  # Needed for headers in GH issue templates
+        "mdformat-pyproject>=0.0.1",  # Allows configuring in pyproject.toml
     ],
     "release": [  # `release` GitHub Action job uses this
         "setuptools",  # Installation tool
@@ -64,15 +65,14 @@ setup(
     url="https://github.com/ApeWorX/eip712",
     include_package_data=True,
     install_requires=[
-        "dataclassy>=0.8.2,<1",
+        "dataclassy>=0.11.1,<1",
         "eth-abi>=5.1.0,<6",
-        "eth-account>=0.10.0,<0.12",
-        "eth-hash[pycryptodome]",  # NOTE: Pinned by eth-abi
-        "eth-typing>=3.5.2,<4",
-        "eth-utils>=2.3.1,<3",
-        "hexbytes>=0.3.0,<1",
+        "eth-account>=0.12.1,<0.13",
+        "eth-typing>=4.1.0,<5",
+        "eth-utils>=4.1.0,<5",
+        "hexbytes>=1.2.0,<2",
     ],
-    python_requires=">=3.8,<4",
+    python_requires=">=3.9,<4",
     extras_require=extras_require,
     py_modules=["eip712"],
     license="Apache-2.0",
@@ -88,7 +88,6 @@ setup(
         "Operating System :: MacOS",
         "Operating System :: POSIX",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
