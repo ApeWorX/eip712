@@ -1,5 +1,4 @@
 import pytest
-from eth_account._utils.structured_data.hashing import hash_message
 from hexbytes import HexBytes
 
 from eip712.common import SAFE_VERSIONS, create_safe_tx_def
@@ -25,7 +24,7 @@ def test_gnosis_safe_tx(version):
         else "590e9c66b22ee4584cd655fda57748ce186b85f829a092c28209478efbe86a92"
     )
 
-    assert hash_message(msg).hex() == (
+    assert msg.signable_message.body.hex() == (
         "3c2fdf2ea8af328a67825162e7686000787c5cc9f4b27cb6bfbcaa445b59e2c4"
         if version in ("1.3.0",)
         else "1b393826bed1f2297ffc01916f8339892f9a51dc7f35f477b9a5cdd651d28603"
