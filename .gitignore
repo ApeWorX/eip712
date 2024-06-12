@@ -119,3 +119,7 @@ version.py
 
 # Ape projects
 .build/
+
+# IDE files
+.idea
+.vscode
