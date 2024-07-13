@@ -2,7 +2,7 @@
 Message classes for typed structured data hashing and signing in Ethereum.
 """
 
-from typing import Any, Optional
+from typing import Any, Optional, List, get_origin, get_args
 
 from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
@@ -51,7 +51,35 @@ class EIP712Type:
 
         for field in fields(self.__class__):
             value = getattr(self, field)
-            if isinstance(value, EIP712Type):
+            field_type = self.__annotations__[field]
+
+            if get_origin(field_type) is list:
+                elem_type = get_args(field_type)[0]
+
+                if issubclass(elem_type, EIP712Type):
+                    if len(value) > 0:
+                        value0 = value[0]
+                        types[repr(self)].append({"name": field, "type": f"{repr(value0)}[]"})
+                        types.update(value0._types_)
+                else:
+                    if isinstance(elem_type, str):
+                        if not is_encodable_type(elem_type):
+                            raise ValidationError(
+                                f"'{field}: list[{elem_type}]' is not a valid ABI type"
+                            )
+
+                    elif issubclass(elem_type, EIP712Type):
+                        elem_type = repr(elem_type)
+
+                    else:
+                        raise ValidationError(
+                            f"'{field}' type annotation must either be a subclass of "
+                            f"`EIP712Type` or valid ABI Type string, not list[{elem_type.__name__}]"
+                        )
+
+                    types[repr(self)].append({"name": field, "type": f"{elem_type}[]"})
+
+            elif isinstance(value, EIP712Type):
                 types[repr(self)].append({"name": field, "type": repr(value)})
                 types.update(value._types_)
             else:
@@ -121,15 +149,19 @@ class EIP712Message(EIP712Type):
     @property
     def _body_(self) -> dict:
         """The EIP-712 structured message to be used for serialization and hashing."""
-
         return {
             "domain": self._domain_["domain"],
             "types": dict(self._types_, **self._domain_["types"]),
             "primaryType": repr(self),
             "message": {
-                key: getattr(self, key)
-                for key in fields(self.__class__)
-                if not key.startswith("_") or not key.endswith("_")
+                field: (
+                    [field_elm._body_["message"] for field_elm in getattr(self, field)]
+                    if isinstance(getattr(self, field), list)
+                    and not is_encodable_type(self.__annotations__[field])
+                    else getattr(self, field)
+                )
+                for field in fields(self.__class__)
+                if not field.startswith("_") or not field.endswith("_")
             },
         }
 
@@ -199,6 +231,13 @@ def _prepare_data_for_hashing(data: dict) -> dict:
             item = asdict(value)
         elif isinstance(value, dict):
             item = _prepare_data_for_hashing(item)
+        elif isinstance(value, list):
+            elms = []
+            for elm in item:
+                if isinstance(elm, dict):
+                    elm = _prepare_data_for_hashing(elm)
+                elms.append(elm)
+            item = elms
 
         result[key] = item
 
