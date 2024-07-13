@@ -4,6 +4,8 @@ from hexbytes import HexBytes
 from eip712.common import create_permit_def
 from eip712.messages import EIP712Message, EIP712Type
 
+from typing import List
+
 PERMIT_NAME = "Yearn Vault"
 PERMIT_VERSION = "0.3.5"
 PERMIT_CHAIN_ID = 1
@@ -45,6 +47,40 @@ class MessageWithCanonicalDomainFieldOrder(EIP712Message):
 
 class InvalidMessageMissingDomainFields(EIP712Message):
     value: "uint256"  # type: ignore
+
+
+class NestedType(EIP712Message):
+    field1: "string"  # type: ignore
+    field2: "uint256"  # type: ignore
+
+    def __post_init__(self):
+        self._name_ = "NestedType"
+        self._version_ = "1"
+
+
+class MainType(EIP712Message):
+    name: "string"  # type: ignore
+    age: "uint256"  # type: ignore
+    nested: List[NestedType]
+
+    def __post_init__(self):
+        self._name_ = "MainType"
+        self._version_ = "1"
+
+
+@pytest.fixture
+def nested_instance_1():
+    return NestedType(field1="nested1", field2=100)
+
+
+@pytest.fixture
+def nested_instance_2():
+    return NestedType(field1="nested2", field2=200)
+
+
+@pytest.fixture
+def main_instance(nested_instance_1, nested_instance_2):
+    return MainType(name="Alice", age=30, nested=[nested_instance_1, nested_instance_2])
 
 
 @pytest.fixture
