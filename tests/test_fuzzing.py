@@ -26,7 +26,7 @@ def test_random_message_def(types, data):
 
     exec(
         f"""class Msg(EIP712Message):
-    _name_="test def"
+    eip712_name_:str="test def"
     {members_str}""",
         globals(),
     )  # Creates `Msg` definition

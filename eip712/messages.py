@@ -4,13 +4,15 @@ Message classes for typed structured data hashing and signing in Ethereum.
 
 from typing import Any, get_args, get_origin
 
-from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
 from eth_account._utils.encode_typed_data.encoding_and_hashing import encode_data, hash_type
 from eth_account.messages import SignableMessage, get_primary_type, hash_domain, hash_eip712_message
+from eth_pydantic_types import Address, HexBytes
+from eth_pydantic_types.abi import bytes32, string, uint256
 from eth_utils import keccak
 from eth_utils.curried import ValidationError
-from hexbytes import HexBytes
+from pydantic import BaseModel, model_validator
+from typing_extensions import _AnnotatedAlias
 
 # ! Do not change the order of the fields in this list !
 # To correctly encode and hash the domain fields, they
@@ -31,8 +33,7 @@ EIP712_BODY_FIELDS = [
 ]
 
 
-@dataclass(iter=True, slots=True, kwargs=True, kw_only=True)
-class EIP712Type:
+class EIP712Type(BaseModel):
     """
     Dataclass for `EIP-712 <https://eips.ethereum.org/EIPS/eip-712>`__ structured data types
     (i.e. the contents of an :class:`EIP712Message`).
@@ -49,28 +50,40 @@ class EIP712Type:
         """
         types: dict[str, list[dict[str, str]]] = {cls.__name__: []}
 
-        for field in fields(cls):
-            field_type = cls.__annotations__[field]
+        for field in {
+            k: v.annotation.__name__
+            for k, v in self.model_fields.items()
+            if not k.startswith("eip712_")
+        }:
+            value = getattr(self, field)
+            if isinstance(value, EIP712Type):
+                types[repr(self)].append({"name": field, "type": repr(value)})
+                types.update(value._types_)
+            else:
+                field_type = search_annotations(self, field)
 
-            if get_origin(field_type) is list:
-                if isinstance(elem_type := get_args(field_type)[0], str):
-                    # TODO: Use proper ABI typing, not strings
-                    if not is_encodable_type(elem_type):
-                        raise ValidationError(
-                            f"'{field}: list[{elem_type}]' is not a valid ABI type"
-                        )
+                # If the field type is a string, validate through eth-abi
+                if isinstance(field_type, str):
+                    if not is_encodable_type(field_type):
+                        raise ValidationError(f"'{field}: {field_type}' is not a valid ABI Type")
 
-                    types[cls.__name__].append({"name": field, "type": f"{elem_type}[]"})
-
-                elif issubclass(elem_type, EIP712Type):
-                    types[cls.__name__].append({"name": field, "type": f"{elem_type.__name__}[]"})
-                    types.update(elem_type.eip712_types())
+                elif isinstance(field_type, type) and issubclass(field_type, EIP712Type):
+                    field_type = repr(field_type)
 
                 else:
-                    raise ValidationError(
-                        f"'{field}' type annotation must either be a subclass of "
-                        f"`EIP712Type` or valid ABI Type string, not list[{elem_type.__name__}]"
-                    )
+                    try:
+                        # If field type already has validators or is a known type
+                        #  can confirm that type name will be correct
+                        if isinstance(field_type.__value__, _AnnotatedAlias) or issubclass(
+                            field_type.__value__, (Address, HexBytes)
+                        ):
+                            field_type = field_type.__name__
+
+                    except AttributeError:
+                        raise ValidationError(
+                            f"'{field}' type annotation must either be a subclass of "
+                            f"`EIP712Type` or valid ABI Type, not {field_type.__name__}"
+                        )
 
             elif isinstance(field_type, str):
                 # TODO: Use proper ABI typing, not strings
@@ -96,10 +109,24 @@ class EIP712Type:
         return self.__class__.eip712_types()
 
     def __getitem__(self, key: str) -> Any:
-        if (key.startswith("_") and key.endswith("_")) or key not in fields(self.__class__):
+        if (key.startswith("_") and key.endswith("_")) or key not in self.model_fields:
             raise KeyError("Cannot look up header fields or other attributes this way")
 
         return getattr(self, key)
+
+    def _prepare_data_for_hashing(self, data: dict) -> dict:
+        result: dict = {}
+
+        for key, value in data.items():
+            item: Any = value
+            if isinstance(value, EIP712Type):
+                item = value.model_dump(mode="json")
+            elif isinstance(value, dict):
+                item = self._prepare_data_for_hashing(item)
+
+            result[key] = item
+
+        return result
 
 
 class EIP712Message(EIP712Type):
@@ -109,19 +136,22 @@ class EIP712Message(EIP712Type):
     """
 
     # NOTE: Must override at least one of these fields
-    _name_: str | None = None
-    _version_: str | None = None
-    _chainId_: int | None = None
-    _verifyingContract_: str | None = None
-    _salt_: bytes | None = None
+    eip712_name_: string | None = None
+    eip712_version_: string | None = None
+    eip712_chainId_: uint256 | None = None
+    eip712_verifyingContract_: string | None = None
+    eip712_salt_: bytes32 | None = None
 
-    def __post_init__(self):
+    @model_validator(mode="after")
+    @classmethod
+    def validate_model(cls, value):
         # At least one of the header fields must be in the EIP712 message header
-        if not any(getattr(self, f"_{field}_") for field in EIP712_DOMAIN_FIELDS):
+        if not any(f"eip712_{field}_" in value.__annotations__ for field in EIP712_DOMAIN_FIELDS):
             raise ValidationError(
-                f"EIP712 Message definition '{repr(self)}' must define "
-                f"at least one of: _{'_, _'.join(EIP712_DOMAIN_FIELDS)}_"
+                f"EIP712 Message definition '{repr(cls)}' must define "
+                f"at least one of: eip712_{'_, eip712_'.join(EIP712_DOMAIN_FIELDS)}_"
             )
+        return value
 
     @property
     def _domain_(self) -> dict:
@@ -129,13 +159,15 @@ class EIP712Message(EIP712Type):
         domain_type = [
             {"name": field, "type": abi_type}
             for field, abi_type in EIP712_DOMAIN_FIELDS.items()
-            if getattr(self, f"_{field}_")
+            if getattr(self, f"eip712_{field}_")
         ]
         return {
             "types": {
                 "EIP712Domain": domain_type,
             },
-            "domain": {field["name"]: getattr(self, f"_{field['name']}_") for field in domain_type},
+            "domain": {
+                field["name"]: getattr(self, f"eip712_{field['name']}_") for field in domain_type
+            },
         }
 
     @property
@@ -146,20 +178,10 @@ class EIP712Message(EIP712Type):
             "types": dict(self._types_, **self._domain_["types"]),
             "primaryType": repr(self),
             "message": {
-                field: (
-                    # NOTE: Per EIP-712, encode `list[Item]` as
-                    #       `list[dict[Field, getattr(Item, Field)] for Field in fields(Item)]`
-                    [
-                        dict(zip(fields(item.__class__), item.__tuple__, strict=False))
-                        for item in getattr(self, field)
-                    ]
-                    if isinstance(getattr(self, field), list)
-                    and not is_encodable_type(self.__annotations__[field])
-                    # NOTE: Arrays of "basic" values just get encoded as a list
-                    else getattr(self, field)
-                )
-                for field in fields(self.__class__)
-                if not field.startswith("_") or not field.endswith("_")
+                # TODO use __pydantic_extra__ instead
+                key: getattr(self, key)
+                for key in self.model_fields
+                if not key.startswith("eip712_") or not key.endswith("_")
             },
         }
 
@@ -209,10 +231,16 @@ class EIP712Message(EIP712Type):
         The current message as a :class:`SignableMessage` named tuple instance.
         **NOTE**: The 0x19 prefix is NOT included.
         """
+        domain = self._prepare_data_for_hashing(self._domain_["domain"])
+        types = self._prepare_data_for_hashing(self._types_)
+        message = self._prepare_data_for_hashing(self._body_["message"])
+        messagebytes = HexBytes(1)
+        messageDomain = HexBytes(hash_domain(domain))
+        messageEIP = HexBytes(hash_eip712_message(types, message))
         return SignableMessage(
-            HexBytes(1),
-            self._domain_separator_,
-            self._struct_hash_,
+            messagebytes,
+            messageDomain,
+            messageEIP,
         )
 
 
@@ -220,23 +248,7 @@ def calculate_hash(msg: SignableMessage) -> HexBytes:
     return HexBytes(keccak(b"".join([bytes.fromhex("19"), *msg])))
 
 
-def _prepare_data_for_hashing(data: dict) -> dict:
-    result: dict = {}
-
-    for key, value in data.items():
-        item: Any = value
-        if isinstance(value, EIP712Type):
-            item = asdict(value)
-        elif isinstance(value, dict):
-            item = _prepare_data_for_hashing(item)
-        elif isinstance(value, list):
-            elms = []
-            for elm in item:
-                if isinstance(elm, dict):
-                    elm = _prepare_data_for_hashing(elm)
-                elms.append(elm)
-            item = elms
-
-        result[key] = item
-
-    return result
+def search_annotations(cls, field: str) -> Any:
+    if hasattr(cls, "__annotations__") and field in cls.__annotations__:
+        return cls.__annotations__[field]
+    return search_annotations(super(cls.__class__, cls), field)
