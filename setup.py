@@ -4,24 +4,28 @@ from setuptools import find_packages, setup
 
 extras_require = {
     "test": [  # `test` GitHub Action jobs uses this
-        "pytest>=6.0,<8",  # Core testing package
+        "pytest>=6.0",  # Core testing package
         "pytest-xdist",  # multi-process runner
         "pytest-cov",  # Coverage analyzer plugin
         "hypothesis>=6.70.0,<7",  # Strategy-based fuzzer
     ],
     "lint": [
-        "black>=24.4.2,<25",  # auto-formatter and linter
-        "mypy>=1.10.0,<2",  # Static type analyzer
+        "black>=24.10.0,<25",  # auto-formatter and linter
+        "mypy>=1.13.0,<2",  # Static type analyzer
         "types-setuptools",  # Needed for mypy type shed
-        "flake8>=7.0.0,<8",  # Style linter
-        "isort>=5.12.0,<6",  # Import sorting linter
-        "mdformat>=0.7.17,<0.8",  # Auto-formatter for markdown
-        "mdformat-gfm>=0.3.5,<0.4",  # Needed for formatting GitHub-flavored markdown
-        "mdformat-frontmatter>=0.4.1,<0.5",  # Needed for headers in GH issue templates
-        "mdformat-pyproject>=0.0.1",  # Allows configuring in pyproject.toml
+        "flake8>=7.1.1,<8",  # Style linter
+        "flake8-breakpoint>=1.1.0,<2",  # Detect breakpoints left in code
+        "flake8-print>=5.0.0,<6",  # Detect print statements left in code
+        "flake8-pydantic",  # For detecting issues with Pydantic models
+        "flake8-type-checking",  # Detect imports to move in/out of type-checking blocks
+        "isort>=5.13.2,<6",  # Import sorting linter
+        "mdformat>=0.7.19",  # Auto-formatter for markdown
+        "mdformat-gfm>=0.3.5",  # Needed for formatting GitHub-flavored markdown
+        "mdformat-frontmatter>=0.4.1",  # Needed for headers in GH issue templates
+        "mdformat-pyproject>=0.0.2",  # Allows configuring in pyproject.toml
     ],
     "release": [  # `release` GitHub Action job uses this
-        "setuptools",  # Installation tool
+        "setuptools>=75.6.0",  # Installation tool
         "wheel",  # Packaging tool
         "twine",  # Package upload tool
     ],
@@ -93,5 +97,6 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
 )
