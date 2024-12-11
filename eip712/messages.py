@@ -109,7 +109,7 @@ class EIP712Type(BaseModel):
         return self.__class__.eip712_types()
 
     def __getitem__(self, key: str) -> Any:
-        if (key.startswith("_") and key.endswith("_")) or key not in self.model_fields:
+        if (key.startswith("eip712_") and key.endswith("_")) or key not in self.model_fields:
             raise KeyError("Cannot look up header fields or other attributes this way")
 
         return getattr(self, key)
