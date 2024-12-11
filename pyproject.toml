@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=51.1.1", "wheel", "setuptools_scm[toml]>=5.0"]
+requires = ["setuptools>=75.6.0", "wheel", "setuptools_scm[toml]>=5.0"]
 
 [tool.mypy]
 exclude = ["build/", "dist/", "docs/"]
@@ -14,7 +14,7 @@ write_to = "eip712/version.py"
 
 [tool.black]
 line-length = 100
-target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
 include = '\.pyi?$'
 
 [tool.pytest.ini_options]
