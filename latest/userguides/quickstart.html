@@ -137,15 +137,15 @@ python3<span class="w"> </span>setup.py<span class="w"> </span>install
 <section id="quick-usage">
 <h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Permalink to this heading"></a></h2>
 <p>Define EIP-712 models:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eip712.messages</span> <span class="kn">import</span> <span class="n">EIP712Message</span><span class="p">,</span> <span class="n">EIP712Type</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eip712.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">EIP712Message</span><span class="p">,</span> <span class="n">EIP712Type</span>
 
 
-<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">EIP712Type</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">EIP712Type</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
     <span class="n">wallet</span><span class="p">:</span> <span class="s2">&quot;address&quot;</span>
 
 
-<span class="k">class</span> <span class="nc">Mail</span><span class="p">(</span><span class="n">EIP712Message</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mail</span><span class="p">(</span><span class="n">EIP712Message</span><span class="p">):</span>
     <span class="n">_chainId_</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">_name_</span> <span class="o">=</span> <span class="s2">&quot;Ether Mail&quot;</span>
     <span class="n">_verifyingContract_</span> <span class="o">=</span> <span class="s2">&quot;0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC&quot;</span>
