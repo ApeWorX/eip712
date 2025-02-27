@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 import pytest
 from hexbytes import HexBytes
 
 from eip712.common import create_permit_def
 from eip712.messages import EIP712Message, EIP712Type
+
+if TYPE_CHECKING:
+    from eth_pydantic_types.abi import address, bytes32, string, uint256
 
 PERMIT_NAME = "Yearn Vault"
 PERMIT_VERSION = "0.3.5"
@@ -17,34 +22,34 @@ PERMIT_SALT = HexBytes(123456789)
 
 
 class SubType(EIP712Type):
-    inner: "uint256"  # type: ignore
+    inner: "uint256"
 
 
 class ValidMessageWithNameDomainField(EIP712Message):
-    _name_ = "Valid Test Message"
-    value: "uint256"  # type: ignore
-    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore
+    eip712_name_: "string" = "Valid Test Message"
+    value: "uint256"
+    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
     sub: SubType
 
 
 class MessageWithNonCanonicalDomainFieldOrder(EIP712Message):
-    _name_ = PERMIT_NAME
-    _salt_ = PERMIT_SALT
-    _chainId_ = PERMIT_CHAIN_ID
-    _version_ = PERMIT_VERSION
-    _verifyingContract_ = PERMIT_VAULT_ADDRESS
+    eip712_name_: "string" = PERMIT_NAME
+    eip712_salt_: "bytes32" = PERMIT_SALT
+    eip712_chainId_: "uint256" = PERMIT_CHAIN_ID
+    eip712_version_: "string" = PERMIT_VERSION
+    eip712_verifyingContract_: "address" = PERMIT_VAULT_ADDRESS
 
 
 class MessageWithCanonicalDomainFieldOrder(EIP712Message):
-    _name_ = PERMIT_NAME
-    _version_ = PERMIT_VERSION
-    _chainId_ = PERMIT_CHAIN_ID
-    _verifyingContract_ = PERMIT_VAULT_ADDRESS
-    _salt_ = PERMIT_SALT
+    eip712_name_: "string" = PERMIT_NAME
+    eip712_version_: "string" = PERMIT_VERSION
+    eip712_chainId_: "uint256" = PERMIT_CHAIN_ID
+    eip712_verifyingContract_: "address" = PERMIT_VAULT_ADDRESS
+    eip712_salt_: "bytes32" = PERMIT_SALT
 
 
 class InvalidMessageMissingDomainFields(EIP712Message):
-    value: "uint256"  # type: ignore
+    value: "uint256"
 
 
 @pytest.fixture
