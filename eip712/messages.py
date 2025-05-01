@@ -139,18 +139,32 @@ class EIP712Message(EIP712Type):
         return super().__getitem__(key)
 
     @property
+    def _domain_separator_(self) -> HexBytes:
+        """
+        The hashed domain.
+        """
+        domain = _prepare_data_for_hashing(self._domain_["domain"])
+        return HexBytes(hash_domain(domain))
+
+    @property
+    def _hash_struct_(self) -> HexBytes:
+        """
+        The hashed message.
+        """
+        types = _prepare_data_for_hashing(self._types_)
+        message = _prepare_data_for_hashing(self._body_["message"])
+        return HexBytes(hash_eip712_message(types, message))
+
+    @property
     def signable_message(self) -> SignableMessage:
         """
         The current message as a :class:`SignableMessage` named tuple instance.
         **NOTE**: The 0x19 prefix is NOT included.
         """
-        domain = _prepare_data_for_hashing(self._domain_["domain"])
-        types = _prepare_data_for_hashing(self._types_)
-        message = _prepare_data_for_hashing(self._body_["message"])
         return SignableMessage(
             HexBytes(1),
-            HexBytes(hash_domain(domain)),
-            HexBytes(hash_eip712_message(types, message)),
+            self._domain_separator_,
+            self._hash_struct_,
         )
 
 
