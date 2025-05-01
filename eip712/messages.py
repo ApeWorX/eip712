@@ -148,7 +148,7 @@ class EIP712Message(EIP712Type):
         return HexBytes(hash_domain(domain))
 
     @property
-    def _hash_struct_(self) -> HexBytes:
+    def _struct_hash_(self) -> HexBytes:
         """
         The hashed message.
         """
@@ -163,6 +163,10 @@ class EIP712Message(EIP712Type):
         return HexBytes(hash_type(primary_type, types))
 
     @property
+    def _message_hash_(self) -> HexBytes:
+        return calculate_hash(self.signable_message)
+
+    @property
     def signable_message(self) -> SignableMessage:
         """
         The current message as a :class:`SignableMessage` named tuple instance.
@@ -171,7 +175,7 @@ class EIP712Message(EIP712Type):
         return SignableMessage(
             HexBytes(1),
             self._domain_separator_,
-            self._hash_struct_,
+            self._struct_hash_,
         )
 
 
