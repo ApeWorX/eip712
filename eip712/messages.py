@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
-from eth_account._utils.encode_typed_data.encoding_and_hashing import hash_type
+from eth_account._utils.encode_typed_data.encoding_and_hashing import encode_data, hash_type
 from eth_account.messages import SignableMessage, get_primary_type, hash_domain, hash_eip712_message
 from eth_utils import keccak
 from eth_utils.curried import ValidationError
@@ -155,6 +155,13 @@ class EIP712Message(EIP712Type):
         types = _prepare_data_for_hashing(self._types_)
         message = _prepare_data_for_hashing(self._body_["message"])
         return HexBytes(hash_eip712_message(types, message))
+
+    @property
+    def _encoded_struct_(self) -> HexBytes:
+        types = _prepare_data_for_hashing(self._types_)
+        message = _prepare_data_for_hashing(self._body_["message"])
+        primary_type = get_primary_type(types)
+        return HexBytes(encode_data(primary_type, types, message))
 
     @property
     def _type_hash_(self) -> HexBytes:
