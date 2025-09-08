@@ -70,10 +70,10 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclassy>=0.11.1,<1",
-        "eth-abi>=5.1.0,<6",
         "eth-account>=0.11.3,<0.14",
         "eth-typing>=3.5.2,<6",
-        "eth-utils>=2.3.1,<6",
+        "faster-eth-abi>=5.1.0,<6",
+        "faster-eth-utils>=2.3.1,<6",
         "hexbytes>=0.3.1,<2",
     ],
     python_requires=">=3.9,<4",
