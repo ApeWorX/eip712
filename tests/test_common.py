@@ -1,5 +1,5 @@
 import pytest
-from eth_utils import to_hex
+from faster_eth_utils import to_hex
 from hexbytes import HexBytes
 
 from eip712.common import SAFE_VERSIONS, create_safe_tx_def
