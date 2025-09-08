@@ -1,6 +1,6 @@
 import pytest
 from eth_account.messages import ValidationError
-from eth_utils import to_hex
+from faster_eth_utils import to_hex
 
 from .conftest import (
     InvalidMessageMissingDomainFields,
