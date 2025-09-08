@@ -1,7 +1,7 @@
 import string
 
 import pytest
-from eth_abi.tools._strategies import get_abi_strategy
+from faster_eth_abi.tools._strategies import get_abi_strategy
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
