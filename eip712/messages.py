@@ -8,8 +8,8 @@ from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
 from eth_account._utils.encode_typed_data.encoding_and_hashing import encode_data, hash_type
 from eth_account.messages import SignableMessage, get_primary_type, hash_domain, hash_eip712_message
-from eth_utils import keccak
-from eth_utils.curried import ValidationError
+from faster_eth_utils import keccak
+from faster_eth_utils.curried import ValidationError
 from hexbytes import HexBytes
 
 # ! Do not change the order of the fields in this list !
