@@ -155,9 +155,15 @@ class EIP712Message(EIP712Type):
             "primaryType": repr(self),
             "message": {
                 field: (
-                    [field_elm._body_["message"] for field_elm in getattr(self, field)]
+                    # NOTE: Per EIP-712, encode `list[Item]` as
+                    #       `list[dict[Field, getattr(Item, Field)] for Field in fields(Item)]`
+                    [
+                        dict(zip(fields(item.__class__), item.__tuple__))
+                        for item in getattr(self, field)
+                    ]
                     if isinstance(getattr(self, field), list)
                     and not is_encodable_type(self.__annotations__[field])
+                    # NOTE: Arrays of "basic" values just get encoded as a list
                     else getattr(self, field)
                 )
                 for field in fields(self.__class__)

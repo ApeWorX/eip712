@@ -47,13 +47,9 @@ class InvalidMessageMissingDomainFields(EIP712Message):
     value: "uint256"  # type: ignore
 
 
-class NestedType(EIP712Message):
+class NestedType(EIP712Type):
     field1: "string"  # type: ignore
     field2: "uint256"  # type: ignore
-
-    def __post_init__(self):
-        self._name_ = "NestedType"
-        self._version_ = "1"
 
 
 class MainType(EIP712Message):
