@@ -11,6 +11,26 @@ from .conftest import (
 
 
 def test_nested_list_message(main_instance):
+    assert main_instance._types_ == {
+        "MainType": [
+            {"name": "name", "type": "string"},
+            {"name": "age", "type": "uint256"},
+            {"name": "nested", "type": "NestedType[]"},
+        ],
+        "NestedType": [
+            {"name": "field1", "type": "string"},
+            {"name": "field2", "type": "uint256"},
+        ],
+    }
+    assert main_instance._body_.get("message") == {
+        "name": main_instance.name,
+        "age": main_instance.age,
+        "nested": [
+            {"field1": main_instance.nested[0].field1, "field2": main_instance.nested[0].field2},
+            {"field1": main_instance.nested[1].field1, "field2": main_instance.nested[1].field2},
+        ],
+    }
+
     msg = main_instance.signable_message
     assert to_hex(msg.version) == "0x01"
     assert (

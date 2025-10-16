@@ -41,67 +41,59 @@ class EIP712Type:
     def __repr__(self) -> str:
         return self.__class__.__name__
 
-    @property
-    def _types_(self) -> dict:
+    @classmethod
+    def eip712_types(cls) -> dict:
         """
         Recursively built ``dict`` (name of type ``->`` list of subtypes) of
         the underlying fields' types.
         """
-        types: dict[str, list] = {repr(self): []}
+        types: dict[str, list[dict[str, str]]] = {cls.__name__: []}
 
-        for field in fields(self.__class__):
-            value = getattr(self, field)
-            field_type = self.__annotations__[field]
+        for field in fields(cls):
+            field_type = cls.__annotations__[field]
 
             if get_origin(field_type) is list:
-                elem_type = get_args(field_type)[0]
-
-                if issubclass(elem_type, EIP712Type):
-                    if len(value) > 0:
-                        value0 = value[0]
-                        types[repr(self)].append({"name": field, "type": f"{repr(value0)}[]"})
-                        types.update(value0._types_)
-                else:
-                    if isinstance(elem_type, str):
-                        if not is_encodable_type(elem_type):
-                            raise ValidationError(
-                                f"'{field}: list[{elem_type}]' is not a valid ABI type"
-                            )
-
-                    elif issubclass(elem_type, EIP712Type):
-                        elem_type = repr(elem_type)
-
-                    else:
+                if isinstance(elem_type := get_args(field_type)[0], str):
+                    # TODO: Use proper ABI typing, not strings
+                    if not is_encodable_type(elem_type):
                         raise ValidationError(
-                            f"'{field}' type annotation must either be a subclass of "
-                            f"`EIP712Type` or valid ABI Type string, not list[{elem_type.__name__}]"
+                            f"'{field}: list[{elem_type}]' is not a valid ABI type"
                         )
 
-                    types[repr(self)].append({"name": field, "type": f"{elem_type}[]"})
+                    types[cls.__name__].append({"name": field, "type": f"{elem_type}[]"})
 
-            elif isinstance(value, EIP712Type):
-                types[repr(self)].append({"name": field, "type": repr(value)})
-                types.update(value._types_)
-            else:
-                # TODO: Use proper ABI typing, not strings
-                field_type = self.__annotations__[field]
-
-                if isinstance(field_type, str):
-                    if not is_encodable_type(field_type):
-                        raise ValidationError(f"'{field}: {field_type}' is not a valid ABI type")
-
-                elif issubclass(field_type, EIP712Type):
-                    field_type = repr(field_type)
+                elif issubclass(elem_type, EIP712Type):
+                    types[cls.__name__].append({"name": field, "type": f"{elem_type.__name__}[]"})
+                    types.update(elem_type.eip712_types())
 
                 else:
                     raise ValidationError(
                         f"'{field}' type annotation must either be a subclass of "
-                        f"`EIP712Type` or valid ABI Type string, not {field_type.__name__}"
+                        f"`EIP712Type` or valid ABI Type string, not list[{elem_type.__name__}]"
                     )
 
-                types[repr(self)].append({"name": field, "type": field_type})
+            elif isinstance(field_type, str):
+                # TODO: Use proper ABI typing, not strings
+                if not is_encodable_type(field_type):
+                    raise ValidationError(f"'{field}: {field_type}' is not a valid ABI type")
+
+                types[cls.__name__].append({"name": field, "type": field_type})
+
+            elif issubclass(field_type, EIP712Type):
+                types[cls.__name__].append({"name": field, "type": field_type.__name__})
+                types.update(field_type.eip712_types())
+
+            else:
+                raise ValidationError(
+                    f"'{field}' type annotation must either be a subclass of "
+                    f"`EIP712Type` or valid ABI Type string, not {field_type.__name__}"
+                )
 
         return types
+
+    @property
+    def _types_(self) -> dict:
+        return self.__class__.eip712_types()
 
     def __getitem__(self, key: str) -> Any:
         if (key.startswith("_") and key.endswith("_")) or key not in fields(self.__class__):
