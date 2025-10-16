@@ -4,8 +4,6 @@ from hexbytes import HexBytes
 from eip712.common import create_permit_def
 from eip712.messages import EIP712Message, EIP712Type
 
-from typing import List
-
 PERMIT_NAME = "Yearn Vault"
 PERMIT_VERSION = "0.3.5"
 PERMIT_CHAIN_ID = 1
@@ -61,7 +59,7 @@ class NestedType(EIP712Message):
 class MainType(EIP712Message):
     name: "string"  # type: ignore
     age: "uint256"  # type: ignore
-    nested: List[NestedType]
+    nested: list[NestedType]
 
     def __post_init__(self):
         self._name_ = "MainType"

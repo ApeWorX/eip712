@@ -2,7 +2,7 @@
 Message classes for typed structured data hashing and signing in Ethereum.
 """
 
-from typing import Any, Optional, List, get_origin, get_args
+from typing import Any, Optional, get_args, get_origin
 
 from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
