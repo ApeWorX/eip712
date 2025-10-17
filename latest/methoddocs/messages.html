@@ -62,7 +62,6 @@
               <p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../userguides/quickstart.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../userguides/quickstart.html#initialize-a-person-object-as-you-would-normally">Initialize a Person object as you would normally</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python Reference</span></p>
 <ul class="current">
@@ -72,7 +71,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#eip712.messages.EIP712Message.signable_message"><code class="docutils literal notranslate"><span class="pre">EIP712Message.signable_message</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#eip712.messages.EIP712Type"><code class="docutils literal notranslate"><span class="pre">EIP712Type</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eip712.messages.EIP712Type"><code class="docutils literal notranslate"><span class="pre">EIP712Type</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#eip712.messages.EIP712Type.eip712_types"><code class="docutils literal notranslate"><span class="pre">EIP712Type.eip712_types()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -126,6 +128,13 @@ parameters, and the message object.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Dataclass for <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-712">EIP-712</a> structured data types
 (i.e. the contents of an <a class="reference internal" href="#eip712.messages.EIP712Message" title="eip712.messages.EIP712Message"><code class="xref py py-class docutils literal notranslate"><span class="pre">EIP712Message</span></code></a>).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eip712.messages.EIP712Type.eip712_types">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eip712_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#eip712.messages.EIP712Type.eip712_types" title="Permalink to this definition"></a></dt>
+<dd><p>Recursively built <code class="docutils literal notranslate"><span class="pre">dict</span></code> (name of type <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> list of subtypes) of
+the underlying fields’ types.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>

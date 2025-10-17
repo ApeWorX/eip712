@@ -72,7 +72,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#quick-usage">Quick Usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#initialize-a-person-object-as-you-would-normally">Initialize a Person object as you would normally</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python Reference</span></p>
 <ul>
@@ -146,20 +145,42 @@ python3<span class="w"> </span>setup.py<span class="w"> </span>install
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Mail</span><span class="p">(</span><span class="n">EIP712Message</span><span class="p">):</span>
+    <span class="c1"># NOTE: Make sure to define your EIP712 domain configuration</span>
     <span class="n">_chainId_</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">_name_</span> <span class="o">=</span> <span class="s2">&quot;Ether Mail&quot;</span>
-    <span class="n">_verifyingContract_</span> <span class="o">=</span> <span class="s2">&quot;0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC&quot;</span>
+    <span class="n">_verifyingContract_</span> <span class="o">=</span> <span class="s2">&quot;0xDDdDddDdDdddDDddDDddDDDDdDdDDdDDdDDDDDDd&quot;</span>
     <span class="n">_version_</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
 
+    <span class="c1"># Struct fields (can be &quot;basic&quot; types, `EIP712Type` structs, or arrays of either)</span>
     <span class="n">sender</span><span class="p">:</span> <span class="n">Person</span>
-    <span class="n">receiver</span><span class="p">:</span> <span class="n">Person</span>
+    <span class="n">receivers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span>
+    <span class="c1"># NOTE: Define &quot;basic&quot; ABI types as strings</span>
+    <span class="n">ttl</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+</pre></div>
+</div>
+<p>Then initialize these models:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sender</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa&quot;</span><span class="p">)</span>
+<span class="n">receivers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB&quot;</span><span class="p">),</span>
+    <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Charlie&quot;</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">mail</span> <span class="o">=</span> <span class="n">Mail</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, you can sign these messages using <code class="docutils literal notranslate"><span class="pre">eth-account</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_account</span><span class="w"> </span><span class="kn">import</span> <span class="n">Account</span>
+
+<span class="n">acct</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_key</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">acct</span><span class="o">.</span><span class="n">sign_message</span><span class="p">(</span><span class="n">mail</span><span class="o">.</span><span class="n">signable_message</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or natively in <a class="reference external" href="https://docs.apeworx.io/ape">Ape</a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `ape console`</span>
+<span class="n">me</span> <span class="o">=</span> <span class="n">accounts</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
+<span class="n">sig</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">sign_message</span><span class="p">(</span><span class="n">mail</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-</section>
-<section id="initialize-a-person-object-as-you-would-normally">
-<h1>Initialize a Person object as you would normally<a class="headerlink" href="#initialize-a-person-object-as-you-would-normally" title="Permalink to this heading"></a></h1>
-<p>person = Person(name=”Joe”, wallet=”0xa27CEF8aF2B6575903b676e5644657FAe96F491F”)</p>
 </section>
 
 
