@@ -47,6 +47,36 @@ class InvalidMessageMissingDomainFields(EIP712Message):
     value: "uint256"  # type: ignore
 
 
+class NestedType(EIP712Type):
+    field1: "string"  # type: ignore
+    field2: "uint256"  # type: ignore
+
+
+class MainType(EIP712Message):
+    name: "string"  # type: ignore
+    age: "uint256"  # type: ignore
+    nested: list[NestedType]
+
+    def __post_init__(self):
+        self._name_ = "MainType"
+        self._version_ = "1"
+
+
+@pytest.fixture
+def nested_instance_1():
+    return NestedType(field1="nested1", field2=100)
+
+
+@pytest.fixture
+def nested_instance_2():
+    return NestedType(field1="nested2", field2=200)
+
+
+@pytest.fixture
+def main_instance(nested_instance_1, nested_instance_2):
+    return MainType(name="Alice", age=30, nested=[nested_instance_1, nested_instance_2])
+
+
 @pytest.fixture
 def valid_message_with_name_domain_field():
     return ValidMessageWithNameDomainField(value=1, sub=SubType(inner=2))
