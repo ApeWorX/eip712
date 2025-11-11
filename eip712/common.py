@@ -1,6 +1,5 @@
 # flake8: noqa F821
 # Collection of commonly-used EIP712 message type definitions
-from typing import Optional, Type, Union
 
 from .messages import EIP712Message
 
@@ -77,14 +76,14 @@ class SafeTxV2(EIP712Message):
     nonce: "uint256"  # type: ignore
 
 
-SafeTx = Union[SafeTxV1, SafeTxV2]
+SafeTx = SafeTxV1 | SafeTxV2
 SAFE_VERSIONS = {"1.0.0", "1.1.0", "1.1.1", "1.2.0", "1.3.0", "1.4.1"}
 
 
 def create_safe_tx_def(
     version: str = "1.3.0",
-    contract_address: Optional[str] = None,
-    chain_id: Optional[int] = None,
+    contract_address: str | None = None,
+    chain_id: int | None = None,
 ) -> type[SafeTx]:
     if not contract_address:
         raise ValueError("Must define 'contract_address'")
