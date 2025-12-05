@@ -1,60 +1,38 @@
 name: Docs
 
 on:
-    push:
-        branches: [main]
-    release:
-        types: [released]
-    pull_request:
-        types: [opened, synchronize]
+  push:
+    branches: [main]
+  release:
+    types: [released]
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  # Cancel older, in-progress jobs from the same PR, same workflow.
+  # use run_id if the job is triggered by a push to ensure
+  # push-triggered jobs to not get canceled.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
-    docs:
-        runs-on: ubuntu-latest
+  docs:
+    runs-on: ubuntu-latest
 
-        permissions: 
-            contents: write
+    permissions:
+      contents: write
 
-        steps:
-        - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v5
+    - uses: astral-sh/setup-uv@v7
 
-        - name: Setup Python
-          uses: actions/setup-python@v5
-          with:
-              python-version: "3.10"
+    - name: Install Dependencies
+      run: |
+        uv venv
+        source .venv/bin/activate
+        uv pip install . --group docs
 
-        - name: Install Dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install .[doc]
-
-        - name: Build HTML artifact
-          run: python build_docs.py
-
-        - name: Upload HTML artifact
-          uses: actions/upload-artifact@v4
-          with:
-              name: DocumentationHTML
-              path: docs/_build/eip712
-
-        - name: Commit and publish documentation changes to gh-pages branch
-          run: |
-              if [[ "${GITHUB_EVENT_NAME}" =~ "pull_request" ]]; then
-                echo "skipping 'git commit' step for PR"
-              else
-                git clone https://github.com/${GITHUB_REPOSITORY} --branch gh-pages --single-branch gh-pages
-                cp -r docs/_build/eip712/* gh-pages/
-                cd gh-pages
-                touch .nojekyll
-                git config --local user.email "action@github.com"
-                git config --local user.name "GitHub Action"
-                git add .
-                git commit -m "Update documentation" -a || true
-              fi
-        - name: Push changes
-          uses: ad-m/github-push-action@master
-          if: ${{ github.event_name != 'pull_request' }}
-          with:
-              branch: gh-pages
-              directory: gh-pages
-              github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Ape Docs
+      uses: apeworx/sphinx-ape@main
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}

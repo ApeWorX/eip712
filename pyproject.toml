@@ -1,20 +1,84 @@
 [build-system]
-requires = ["setuptools>=75.6.0", "wheel", "setuptools_scm[toml]>=5.0"]
+requires = ["setuptools>=75.6.0", "setuptools_scm[toml]>=5.0"]
+build-backend = "setuptools.build_meta"
 
-[tool.mypy]
-exclude = ["build/", "dist/", "docs/"]
+[project]
+name = "eip712"
+dynamic = ["version"]
+description = "eip712: Message classes for typed structured data hashing and signing in Ethereum"
+readme = "README.md"
+authors = [{ name = "ApeWorX Ltd.", email = "admin@apeworx.io" }]
+license = "Apache-2.0"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+requires-python = ">=3.10,<4"
+dependencies = [
+    "dataclassy>=0.11.1,<1",
+    "eth-abi>=5.1.0,<6",
+    "eth-account>=0.11.3,<0.14",
+    "eth-typing>=3.5.2,<6",
+    "eth-utils>=2.3.1,<6",
+    "hexbytes>=0.3.1,<2",
+]
+
+[project.urls]
+Homepage = "https://github.com/ApeWorX/eip712"
+
+[dependency-groups]
+test = [
+    "pytest",
+    "pytest-xdist",
+    "pytest-cov",
+    "hypothesis",
+]
+lint = [
+    "ruff",
+    "mypy",
+    "types-setuptools",
+    "mdformat",
+    "mdformat-gfm",
+    "mdformat-frontmatter",
+    "mdformat-pyproject",
+]
+docs = [
+    "sphinx-ape",
+]
+dev = [
+    "commitlint",
+    "pre-commit",
+    "pytest-watch",
+    "IPython",
+    "ipdb",
+    { include-group = "lint" },
+    { include-group = "test" },
+    { include-group = "docs" },
+]
+
+[tool.setuptools]
+include-package-data = true
+packages = ["eip712"]
+
+[tool.setuptools.package-data]
+eip712 = ["py.typed"]
 
 [tool.setuptools_scm]
 write_to = "eip712/version.py"
 
-# NOTE: you have to use single-quoted strings in TOML for regular expressions.
-# It's the equivalent of r-strings in Python.  Multiline strings are treated as
-# verbose regular expressions by Black.  Use [ ] to denote a significant space
-# character.
-
 [tool.black]
 line-length = 100
-target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
+target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
 include = '\.pyi?$'
 
 [tool.pytest.ini_options]
@@ -39,3 +103,15 @@ skip = ["version.py"]
 
 [tool.mdformat]
 number = true
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["docs", "build", ".eggs", "venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4"]
+ignore = ["E501"]
+per-file-ignores = { "tests/conftest.py" = ["F821"] }
+
+[tool.mypy]
+exclude = ["build/", "dist/", "docs/"]
