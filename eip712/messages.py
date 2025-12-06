@@ -150,7 +150,7 @@ class EIP712Message(EIP712Type):
                     # NOTE: Per EIP-712, encode `list[Item]` as
                     #       `list[dict[Field, getattr(Item, Field)] for Field in fields(Item)]`
                     [
-                        dict(zip(fields(item.__class__), item.__tuple__))
+                        dict(zip(fields(item.__class__), item.__tuple__, strict=False))
                         for item in getattr(self, field)
                     ]
                     if isinstance(getattr(self, field), list)
