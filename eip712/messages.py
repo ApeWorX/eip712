@@ -2,7 +2,7 @@
 Message classes for typed structured data hashing and signing in Ethereum.
 """
 
-from typing import Any, Optional, get_args, get_origin
+from typing import Any, get_args, get_origin
 
 from dataclassy import asdict, dataclass, fields
 from eth_abi.abi import is_encodable_type  # type: ignore[import-untyped]
@@ -109,11 +109,11 @@ class EIP712Message(EIP712Type):
     """
 
     # NOTE: Must override at least one of these fields
-    _name_: Optional[str] = None
-    _version_: Optional[str] = None
-    _chainId_: Optional[int] = None
-    _verifyingContract_: Optional[str] = None
-    _salt_: Optional[bytes] = None
+    _name_: str | None = None
+    _version_: str | None = None
+    _chainId_: int | None = None
+    _verifyingContract_: str | None = None
+    _salt_: bytes | None = None
 
     def __post_init__(self):
         # At least one of the header fields must be in the EIP712 message header
