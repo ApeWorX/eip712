@@ -1,5 +1,6 @@
 import pytest
 from eth_utils import to_hex
+from pydantic import ValidationError
 
 from eip712.messages import calculate_hash, extract_eip712_struct_message
 
@@ -52,7 +53,7 @@ def test_nested_list_message(main_instance):
 
 
 def test_invalid_nested_message_without_domain_fields():
-    with pytest.raises(TypeError):
+    with pytest.raises(ValidationError):
         MainType(age=30, nested=[])
 
 
