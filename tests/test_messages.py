@@ -51,7 +51,7 @@ def test_nested_list_message(main_instance):
     )
 
 
-def test_invalid_message_without_domain_fields():
+def test_invalid_nested_message_without_domain_fields():
     with pytest.raises(TypeError):
         MainType(age=30, nested=[])
 
@@ -84,6 +84,6 @@ def test_yearn_vaults_message(permit, permit_raw_data):
 def test_ux_tuple_and_starargs(permit):
     assert (
         [*permit]
-        == list(tuple(permit))
+        == list(tuple(permit))  # noqa: C414
         == [permit.owner, permit.spender, permit.value, permit.nonce, permit.deadline]
     )

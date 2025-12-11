@@ -4,16 +4,11 @@ Message classes for typed structured data hashing and signing in Ethereum.
 
 from typing import Any, ClassVar
 
-from eth_account._utils.encode_typed_data.encoding_and_hashing import encode_data, hash_type
 from eth_account.messages import (
     SignableMessage,
     encode_typed_data,
-    get_primary_type,
-    hash_domain,
-    hash_eip712_message,
 )
 from eth_pydantic_types import HexBytes, abi
-from eth_utils import keccak
 from eth_utils.crypto import keccak
 from pydantic import BaseModel, ConfigDict, PrivateAttr
 
@@ -35,13 +30,13 @@ class EIP712Domain(BaseModel):
 
     @property
     def eip712_type(self) -> dict:
-        return dict(
-            EIP712Domain=[
+        return {
+            "EIP712Domain": [
                 {"name": field, "type": field_info.annotation.__args__[0].__name__}
                 for field, field_info in self.model_fields.items()
                 if getattr(self, field) is not None
             ]
-        )
+        }
 
 
 class EIP712Message(BaseModel):
@@ -77,40 +72,6 @@ class EIP712Message(BaseModel):
     def __iter__(self):
         # NOTE: We override this to get nice behavior in Ape transaction methods
         return (v for _, v in super().__iter__())
-
-    @property
-    def _domain_separator_(self) -> HexBytes:
-        """
-        The hashed domain.
-        """
-        domain = _prepare_data_for_hashing(self._domain_["domain"])
-        return HexBytes(hash_domain(domain))
-
-    @property
-    def _struct_hash_(self) -> HexBytes:
-        """
-        The hashed message.
-        """
-        types = _prepare_data_for_hashing(self._types_)
-        message = _prepare_data_for_hashing(self._body_["message"])
-        return HexBytes(hash_eip712_message(types, message))
-
-    @property
-    def _encoded_struct_(self) -> HexBytes:
-        types = _prepare_data_for_hashing(self._types_)
-        message = _prepare_data_for_hashing(self._body_["message"])
-        primary_type = get_primary_type(types)
-        return HexBytes(encode_data(primary_type, types, message))
-
-    @property
-    def _type_hash_(self) -> HexBytes:
-        types = _prepare_data_for_hashing(self._types_)
-        primary_type = get_primary_type(types)
-        return HexBytes(hash_type(primary_type, types))
-
-    @property
-    def _message_hash_(self) -> HexBytes:
-        return calculate_hash(self.signable_message)
 
     @property
     def signable_message(self) -> SignableMessage:
