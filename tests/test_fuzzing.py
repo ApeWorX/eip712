@@ -13,7 +13,7 @@ abi_types.extend(f"uint{i}" for i in range(8, 256 + 8, 8))
 abi_types = (
     abi_types  # all other types
     + [f"{t}[]" for t in abi_types]  # dynamic arrays
-    + [f"{t}[{i}]" for i, t in zip(range(1, 10), abi_types)]  # static arrays
+    + [f"{t}[{i}]" for i, t in zip(range(1, 10), abi_types, strict=False)]  # static arrays
 )
 
 
@@ -22,7 +22,7 @@ abi_types = (
 @given(types=st.lists(st.sampled_from(abi_types), min_size=1, max_size=10), data=st.data())
 def test_random_message_def(types, data):
     members = string.ascii_lowercase[: len(types)]
-    members_str = "\n    ".join(f'{k}: "{t}"' for k, t in zip(members, types))
+    members_str = "\n    ".join(f'{k}: "{t}"' for k, t in zip(members, types, strict=False))
 
     exec(
         f"""class Msg(EIP712Message):
@@ -32,7 +32,7 @@ def test_random_message_def(types, data):
     )  # Creates `Msg` definition
 
     values = [data.draw(get_abi_strategy(t), label=t) for t in types]
-    msg_dict = dict(zip(members, values))
+    msg_dict = dict(zip(members, values, strict=False))
     instance = Msg(**msg_dict)  # noqa: F821
 
     for k, v in msg_dict.items():
