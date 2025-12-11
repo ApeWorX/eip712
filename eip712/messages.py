@@ -2,7 +2,7 @@
 Message classes for typed structured data hashing and signing in Ethereum.
 """
 
-from typing import Any, ClassVar
+from typing import Any, ClassVar, get_args
 
 from eth_account.messages import SignableMessage, encode_typed_data
 from eth_pydantic_types import HexBytes, abi
@@ -29,9 +29,10 @@ class EIP712Domain(BaseModel):
     def eip712_type(self) -> dict:
         return {
             "EIP712Domain": [
-                {"name": field, "type": field_info.annotation.__args__[0].__name__}
+                {"name": field, "type": inner_type.__name__}
                 for field, field_info in self.model_fields.items()
                 if getattr(self, field) is not None
+                and (inner_type := get_args(field_info.annotation)[0])
             ]
         }
 

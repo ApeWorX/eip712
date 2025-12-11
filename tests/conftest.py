@@ -38,7 +38,7 @@ class ValidMessageWithNameDomainField(EIP712Message):
     eip712_domain = EIP712Domain(name="Valid Test Message")
 
     value: abi.uint256
-    default_value: abi.address = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"
+    default_value: abi.address = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore[assignment]
     sub: SubType
 
 

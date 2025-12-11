@@ -68,6 +68,7 @@ def build_eip712_type(cls: type[BaseModel]) -> dict:
         ):
             field_types.update(build_eip712_type(inner_type))
 
+        assert field_type is not None  # mypy issue
         field_types[cls.__name__].append({"name": field, "type": get_abi_type(field_type)})
 
     return field_types
