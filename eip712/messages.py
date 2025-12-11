@@ -48,18 +48,37 @@ class EIP712Message(BaseModel):
     """
     Container for EIP-712 messages with type information, domain separator
     parameters, and the message object.
+
+    You **must** provide either a default eip712 domain via ``eip712_domain``,
+    or set one via ``eip712_domain=`` in the initialization of your model.
+    You can construct a domain dynamically using 1 or more ``eip712_{field_name}=`` fields as well.
+
+    Usage example::
+
+        class Msg(EIP712Message):
+            eip712_domain = EIP712Domain(name="Msg protocol")
+            a: abi.address
+
+        assert Msg.eip712_domain.name == "Msg protocol"
+
+        msg = Msg(a="0x0000000000000000000000000000000000000000")
+        assert msg.eip712_domain.name == "Msg protocol"
+
+        msg = Msg(a="0x0000000000000000000000000000000000000000", eip712_name="Something else")
+        assert msg.eip712_domain.name == "Something else"
     """
 
     eip712_domain: ClassVar[EIP712Domain | None] = None
+    """The default EIP712 to use for this model. Can be overriden on model init"""
 
     _eip712_domain_: EIP712Domain = PrivateAttr()
 
     model_config = ConfigDict(extra="allow")
 
     def model_post_init(self, context: Any):
-        """The EIP-712 domain structure to be used for serialization and hashing."""
-
+        # Users must either specify via class variable...
         if self.eip712_domain:
+            # Use as default...
             self._eip712_domain_ = self.eip712_domain
             # NOTE: The reason we don't override the class variable is it may affect it's
             #       use in other situations/instances. The classvar is merely the "default" domain
@@ -95,6 +114,7 @@ class EIP712Message(BaseModel):
 
     def __iter__(self):
         # NOTE: We override this to get nice behavior in Ape transaction methods
+        #       e.g. `contract.method(*msg, ...)`
         return (v for _, v in super().__iter__())
 
     @property
