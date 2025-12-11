@@ -4,10 +4,7 @@ Message classes for typed structured data hashing and signing in Ethereum.
 
 from typing import Any, ClassVar
 
-from eth_account.messages import (
-    SignableMessage,
-    encode_typed_data,
-)
+from eth_account.messages import SignableMessage, encode_typed_data
 from eth_pydantic_types import HexBytes, abi
 from eth_utils.crypto import keccak
 from pydantic import BaseModel, ConfigDict, PrivateAttr
@@ -95,3 +92,16 @@ def extract_eip712_struct_message(msg: EIP712Message) -> dict:
 
 def calculate_hash(msg: SignableMessage) -> HexBytes:
     return HexBytes(keccak(b"".join([bytes.fromhex("19"), *msg])))
+
+
+def hash_message(msg: EIP712Message) -> HexBytes:
+    """
+    Hash the given EIP712 Message Struct
+
+    Args:
+        msg: (EIP712Message): EIP712 message struct
+
+    Returns:
+        HexBytes: 32 byte hash of the message, hashed according to EIP712
+    """
+    return calculate_hash(msg.signable_message)
