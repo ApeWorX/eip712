@@ -7,7 +7,7 @@ from typing import Any, ClassVar, get_args
 from eth_account.messages import SignableMessage, encode_typed_data
 from eth_pydantic_types import HexBytes, abi
 from eth_utils.crypto import keccak
-from pydantic import BaseModel, ConfigDict, PrivateAttr
+from pydantic import BaseModel, ConfigDict, PrivateAttr, model_validator
 
 from .utils import build_eip712_type
 
@@ -24,6 +24,13 @@ class EIP712Domain(BaseModel):
     chainId: abi.uint256 | None = None
     verifyingContract: abi.address | None = None
     salt: abi.bytes32 | None = None
+
+    @model_validator(mode="after")
+    def validate_at_least_one_field_present(self):
+        if not (self.name or self.version or self.chainId or self.verifyingContract or self.salt):
+            raise ValueError("Must provider at least one header field")
+
+        return self
 
     @property
     def eip712_type(self) -> dict:
@@ -54,18 +61,37 @@ class EIP712Message(BaseModel):
 
         if self.eip712_domain:
             self._eip712_domain_ = self.eip712_domain
-            return
+            # NOTE: The reason we don't override the class variable is it may affect it's
+            #       use in other situations/instances. The classvar is merely the "default" domain
 
-        if not self.__pydantic_extra__:
-            model_fields = "', '".join(EIP712Domain.model_fields)
-            raise TypeError(f"Must define at least one domain field: '{model_fields}")
+            if self.__pydantic_extra__:
+                # ...but then override with any extras
+                for field in EIP712Domain.model_fields:
+                    if field_value := self.__pydantic_extra__.pop(f"eip712_{field}", None):
+                        setattr(self._eip712_domain_, field, field_value)
 
-        self._eip712_domain_ = EIP712Domain(
-            **{
-                field: self.__pydantic_extra__.pop(field, None)
+        # ...or via extras on model init
+        elif self.__pydantic_extra__ and isinstance(
+            eip712_domain := self.__pydantic_extra__.pop("eip712_domain", None),
+            EIP712Domain,
+        ):
+            self._eip712_domain_ = eip712_domain
+
+        elif self.__pydantic_extra__ and (
+            eip712_domain_kwargs := {
+                field: value
                 for field in EIP712Domain.model_fields
+                if (value := self.__pydantic_extra__.pop(f"eip712_{field}", None))
             }
-        )
+        ):
+            self._eip712_domain_ = EIP712Domain(**eip712_domain_kwargs)
+
+        else:
+            model_fields = "=...', 'eip712_".join(EIP712Domain.model_fields)
+            raise TypeError(
+                f"Must initialize with at least one domain field: 'eip712_{model_fields}=...',"
+                " or using: 'eip712_domain=EIP712Domain(...)'."
+            )
 
     def __iter__(self):
         # NOTE: We override this to get nice behavior in Ape transaction methods

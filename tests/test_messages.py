@@ -2,7 +2,12 @@ import pytest
 from eth_utils import to_hex
 from pydantic import ValidationError
 
-from eip712.messages import calculate_hash, extract_eip712_struct_message
+from eip712.messages import (
+    EIP712Domain,
+    EIP712Message,
+    calculate_hash,
+    extract_eip712_struct_message,
+)
 
 from .conftest import InvalidMessageMissingDomainFields, MainType
 
@@ -88,3 +93,19 @@ def test_ux_tuple_and_starargs(permit):
         == list(tuple(permit))  # noqa: C414
         == [permit.owner, permit.spender, permit.value, permit.nonce, permit.deadline]
     )
+
+
+def test_dynamic_eip712_domain():
+    class Msg(EIP712Message):
+        a: bytes
+
+    with pytest.raises(TypeError):
+        Msg(a=b"")
+
+    Msg(a=b"", eip712_domain=EIP712Domain(name="Something"))
+
+    Msg(a=b"", eip712_name="Something")
+    Msg(a=b"", eip712_version="1")
+    Msg(a=b"", eip712_verifyingContract="0x0000000000000000000000000000000000000000")
+    Msg(a=b"", eip712_chainId=1)
+    Msg(a=b"", eip712_salt=b"\x00")
