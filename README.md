@@ -5,7 +5,7 @@ See [EIP-712](https://eips.ethereum.org/EIPS/eip-712) for details.
 
 ## Dependencies
 
-- [python3](https://www.python.org/downloads) version 3.9 up to 3.12.
+- [python3](https://www.python.org/downloads) version 3.10 up to 3.14.
 
 ## Installation
 
@@ -17,14 +17,14 @@ You can install the latest release via [`pip`](https://pypi.org/project/pip/):
 pip install eip712
 ```
 
-### via `setuptools`
+### via `uv`
 
-You can clone the repository and use [`setuptools`](https://github.com/pypa/setuptools) for the most up-to-date version:
+You can clone the repository and use [`uv`](https://docs.astral.sh/uv) for the most up-to-date version:
 
 ```bash
 git clone https://github.com/ApeWorX/eip712.git
 cd eip712
-python3 setup.py install
+uv sync --group dev
 ```
 
 ## Quick Usage
@@ -32,26 +32,36 @@ python3 setup.py install
 Define EIP-712 models:
 
 ```python
-from eip712.messages import EIP712Message, EIP712Type
+from eip712.messages import EIP712Message
+
+# NOTE: It is **highly** recommended to use ABI types from this library
+from eth_pydantic_types import abi
+
+from pydantic import BaseModel
 
 
+# You can define your inner nested types using normal Pydantic models
 class Person(EIP712Type):
-    name: "string"
-    wallet: "address"
+    # Define fields using types from the `abi` module
+    name: abi.string
+    wallet: abi.address
 
 
+# All valid EIP712 Message Structs **must** subclass `EIP712Message`
 class Mail(EIP712Message):
-    # NOTE: Make sure to define your EIP712 domain configuration
-    _chainId_ = 1
-    _name_ = "Ether Mail"
-    _verifyingContract_ = "0xDDdDddDdDdddDDddDDddDDDDdDdDDdDDdDDDDDDd"
-    _version_ = "1"
+    #  to define your EIP712 domain configuration
+    eip712_domain = EIP712Domain(
+        name="Ether Mail",
+        version="1",
+        verifyingContract="0xDDdDddDdDdddDDddDDddDDDDdDdDDdDDdDDDDDDd",
+        chainId=1,
+    )
 
-    # Struct fields (can be "basic" types, `EIP712Type` structs, or arrays of either)
+    # Struct fields (can be "basic" types, `BaseModel` types, or arrays of either)
     sender: Person
+    # Dynamic array support is as easy as using `list` with the corresponding type
     receivers: list[Person]
-    # NOTE: Define "basic" ABI types as strings
-    ttl: "uint256"
+    ttl: abi.uint256
 ```
 
 Then initialize these models:
