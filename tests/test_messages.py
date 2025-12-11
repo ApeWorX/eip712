@@ -1,17 +1,23 @@
 import pytest
 from eth_utils import to_hex
 
-from eip712.messages import calculate_hash
+from eip712.messages import calculate_hash, extract_eip712_struct_message
 
-from .conftest import (
-    MainType,
-    MessageWithCanonicalDomainFieldOrder,
-    MessageWithNonCanonicalDomainFieldOrder,
-)
+from .conftest import InvalidMessageMissingDomainFields, MainType
 
 
 def test_nested_list_message(main_instance):
-    assert main_instance._types_ == {
+    struct_msg = extract_eip712_struct_message(main_instance)
+    assert struct_msg["domain"] == {
+        "name": "MainType",
+        "version": "1",
+    }
+    assert struct_msg["primaryType"] == "MainType"
+    assert struct_msg["types"] == {
+        "EIP712Domain": [
+            {"name": "name", "type": "string"},
+            {"name": "version", "type": "string"},
+        ],
         "MainType": [
             {"name": "name", "type": "string"},
             {"name": "age", "type": "uint256"},
@@ -22,7 +28,7 @@ def test_nested_list_message(main_instance):
             {"name": "field2", "type": "uint256"},
         ],
     }
-    assert main_instance._body_.get("message") == {
+    assert struct_msg["message"] == {
         "name": main_instance.name,
         "age": main_instance.age,
         "nested": [
@@ -59,20 +65,25 @@ def test_multilevel_message(valid_message_with_name_domain_field):
     assert to_hex(msg.body) == "0x306af87567fa87e55d2bd925d9a3ed2b1ec2c3e71b142785c053dc60b6ca177b"
 
 
+def test_invalid_message_without_domain_fields():
+    with pytest.raises(TypeError):
+        InvalidMessageMissingDomainFields(value=1)
+
+    # NOTE: Works if you dynamically provide header fields
+    InvalidMessageMissingDomainFields(value=1, name="Something valid")
+
+
 def test_yearn_vaults_message(permit, permit_raw_data):
     """
     Testing a real world EIP712 message for a "permit" call in yearn-vaults.
     """
 
-    assert permit._body_ == permit_raw_data
+    assert extract_eip712_struct_message(permit) == permit_raw_data
 
 
-def test_eip712_domain_field_order_is_invariant():
+def test_ux_tuple_and_starargs(permit):
     assert (
-        MessageWithCanonicalDomainFieldOrder._domain_
-        == MessageWithNonCanonicalDomainFieldOrder._domain_
+        [*permit]
+        == list(tuple(permit))
+        == [permit.owner, permit.spender, permit.value, permit.nonce, permit.deadline]
     )
-
-
-def test_ux_tuple_and_starargs(permit, Permit):
-    assert tuple(Permit(*permit)) == tuple(permit)
