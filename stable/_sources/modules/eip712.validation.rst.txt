@@ -1,5 +1,0 @@
-eip712.validation
-=================
-
-.. automodule:: eip712.validation
-    :members:
