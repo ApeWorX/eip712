@@ -76,7 +76,7 @@ def test_invalid_message_without_domain_fields():
         InvalidMessageMissingDomainFields(value=1)
 
     # NOTE: Works if you dynamically provide header fields
-    InvalidMessageMissingDomainFields(value=1, name="Something valid")
+    InvalidMessageMissingDomainFields(value=1, eip712_name="Something valid")
 
 
 def test_yearn_vaults_message(permit, permit_raw_data):
