@@ -1,8 +1,10 @@
 import pytest
+from eth_pydantic_types import abi  # noqa: TC002
 from hexbytes import HexBytes
 
 from eip712.common import create_permit_def
-from eip712.messages import EIP712Message, EIP712Type
+from eip712.messages import EIP712Domain, EIP712Message, EIP712Type
+from eip712.utils import SUPPORTED_NONABI_TYPES
 
 PERMIT_NAME = "Yearn Vault"
 PERMIT_VERSION = "0.3.5"
@@ -13,53 +15,48 @@ PERMIT_SPENDER_ADDRESS = "0x1CEE82EEd89Bd5Be5bf2507a92a755dcF1D8e8dc"
 PERMIT_ALLOWANCE = 100
 PERMIT_NONCE = 0
 PERMIT_DEADLINE = 1619151069
-PERMIT_SALT = HexBytes(123456789)
+PERMIT_SALT = "0x" + (HexBytes(123456789) + HexBytes(b"\x00" * 28)).hex()
+
+ALL_SUPPORTED_TYPES: list = [abi.address, abi.string]
+ALL_SUPPORTED_TYPES.extend(getattr(abi, t) for t in (f"uint{i}" for i in range(8, 256 + 8, 8)))
+ALL_SUPPORTED_TYPES.extend(getattr(abi, t) for t in (f"int{i}" for i in range(8, 256 + 8, 8)))
+ALL_SUPPORTED_TYPES.extend(getattr(abi, t) for t in (f"bytes{i}" for i in range(1, 32 + 1)))
+ALL_SUPPORTED_TYPES.extend(SUPPORTED_NONABI_TYPES)
+
+# dynamic-sized arrays of other types (`list[T]` is a shortcut for dynamic arrays)
+# NOTE: **Important** DO NOT REMOVE WRAPPING BRACKETS (causes infinite alloc loop)
+ALL_SUPPORTED_TYPES.extend([list[t] for t in ALL_SUPPORTED_TYPES])  # type: ignore[valid-type]
+
+# TODO: Support static arrays
 
 
 class SubType(EIP712Type):
-    inner: "uint256"  # type: ignore
+    inner: abi.uint256
 
 
 class ValidMessageWithNameDomainField(EIP712Message):
-    _name_ = "Valid Test Message"
-    value: "uint256"  # type: ignore
-    default_value: "address" = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore
+    eip712_domain = EIP712Domain(name="Valid Test Message")
+
+    value: abi.uint256
+    default_value: abi.address = "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF"  # type: ignore[assignment]
     sub: SubType
 
 
-class MessageWithNonCanonicalDomainFieldOrder(EIP712Message):
-    _name_ = PERMIT_NAME
-    _salt_ = PERMIT_SALT
-    _chainId_ = PERMIT_CHAIN_ID
-    _version_ = PERMIT_VERSION
-    _verifyingContract_ = PERMIT_VAULT_ADDRESS
-
-
-class MessageWithCanonicalDomainFieldOrder(EIP712Message):
-    _name_ = PERMIT_NAME
-    _version_ = PERMIT_VERSION
-    _chainId_ = PERMIT_CHAIN_ID
-    _verifyingContract_ = PERMIT_VAULT_ADDRESS
-    _salt_ = PERMIT_SALT
-
-
 class InvalidMessageMissingDomainFields(EIP712Message):
-    value: "uint256"  # type: ignore
+    value: abi.uint256
 
 
 class NestedType(EIP712Type):
-    field1: "string"  # type: ignore
-    field2: "uint256"  # type: ignore
+    field1: abi.string
+    field2: abi.uint256
 
 
 class MainType(EIP712Message):
-    name: "string"  # type: ignore
-    age: "uint256"  # type: ignore
-    nested: list[NestedType]
+    eip712_domain = EIP712Domain(name="MainType", version="1")
 
-    def __post_init__(self):
-        self._name_ = "MainType"
-        self._version_ = "1"
+    name: abi.string
+    age: abi.uint256
+    nested: list[NestedType]
 
 
 @pytest.fixture
