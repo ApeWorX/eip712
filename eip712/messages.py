@@ -37,7 +37,7 @@ class EIP712Domain(BaseModel):
         return {
             "EIP712Domain": [
                 {"name": field, "type": inner_type.__name__}
-                for field, field_info in self.model_fields.items()
+                for field, field_info in EIP712Domain.model_fields.items()
                 if getattr(self, field) is not None
                 and (inner_type := get_args(field_info.annotation)[0])
             ]
