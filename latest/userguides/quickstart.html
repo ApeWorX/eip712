@@ -80,7 +80,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#via-pip">via <code class="docutils literal notranslate"><span class="pre">pip</span></code></a></li>
-<li><a class="reference internal" href="#via-setuptools">via <code class="docutils literal notranslate"><span class="pre">setuptools</span></code></a></li>
+<li><a class="reference internal" href="#via-uv">via <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quick-usage">Quick Usage</a></li>
@@ -121,7 +121,7 @@ See <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-712">
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.python.org/downloads">python3</a> version 3.9 up to 3.12.</p></li>
+<li><p><a class="reference external" href="https://www.python.org/downloads">python3</a> version 3.10 up to 3.14.</p></li>
 </ul>
 </section>
 <section id="installation">
@@ -133,12 +133,12 @@ See <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-712">
 </span></pre></div>
 </div>
 </section>
-<section id="via-setuptools">
-<h3>via <code class="docutils literal notranslate"><span class="pre">setuptools</span></code><a class="headerlink" href="#via-setuptools" title="Link to this heading"></a></h3>
-<p>You can clone the repository and use <a class="reference external" href="https://github.com/pypa/setuptools"><code class="docutils literal notranslate"><span class="pre">setuptools</span></code></a> for the most up-to-date version:</p>
+<section id="via-uv">
+<h3>via <code class="docutils literal notranslate"><span class="pre">uv</span></code><a class="headerlink" href="#via-uv" title="Link to this heading"></a></h3>
+<p>You can clone the repository and use <a class="reference external" href="https://docs.astral.sh/uv"><code class="docutils literal notranslate"><span class="pre">uv</span></code></a> for the most up-to-date version:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ApeWorX/eip712.git
 </span><span data-line="2"><span class="nb">cd</span><span class="w"> </span>eip712
-</span><span data-line="3">python3<span class="w"> </span>setup.py<span class="w"> </span>install
+</span><span data-line="3">uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev
 </span></pre></div>
 </div>
 </section>
@@ -146,26 +146,36 @@ See <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-712">
 <section id="quick-usage">
 <h2>Quick Usage<a class="headerlink" href="#quick-usage" title="Link to this heading"></a></h2>
 <p>Define EIP-712 models:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">eip712.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">EIP712Message</span><span class="p">,</span> <span class="n">EIP712Type</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">eip712.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">EIP712Message</span>
 </span><span data-line="2">
-</span><span data-line="3">
-</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">EIP712Type</span><span class="p">):</span>
-</span><span data-line="5">    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
-</span><span data-line="6">    <span class="n">wallet</span><span class="p">:</span> <span class="s2">&quot;address&quot;</span>
+</span><span data-line="3"><span class="c1"># NOTE: It is **highly** recommended to use ABI types from this library</span>
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">eth_pydantic_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">abi</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 </span><span data-line="7">
 </span><span data-line="8">
-</span><span data-line="9"><span class="k">class</span><span class="w"> </span><span class="nc">Mail</span><span class="p">(</span><span class="n">EIP712Message</span><span class="p">):</span>
-</span><span data-line="10">    <span class="c1"># NOTE: Make sure to define your EIP712 domain configuration</span>
-</span><span data-line="11">    <span class="n">_chainId_</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="12">    <span class="n">_name_</span> <span class="o">=</span> <span class="s2">&quot;Ether Mail&quot;</span>
-</span><span data-line="13">    <span class="n">_verifyingContract_</span> <span class="o">=</span> <span class="s2">&quot;0xDDdDddDdDdddDDddDDddDDDDdDdDDdDDdDDDDDDd&quot;</span>
-</span><span data-line="14">    <span class="n">_version_</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+</span><span data-line="9"><span class="c1"># You can define your inner nested types using normal Pydantic models</span>
+</span><span data-line="10"><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">EIP712Type</span><span class="p">):</span>
+</span><span data-line="11">    <span class="c1"># Define fields using types from the `abi` module</span>
+</span><span data-line="12">    <span class="n">name</span><span class="p">:</span> <span class="n">abi</span><span class="o">.</span><span class="n">string</span>
+</span><span data-line="13">    <span class="n">wallet</span><span class="p">:</span> <span class="n">abi</span><span class="o">.</span><span class="n">address</span>
+</span><span data-line="14">
 </span><span data-line="15">
-</span><span data-line="16">    <span class="c1"># Struct fields (can be &quot;basic&quot; types, `EIP712Type` structs, or arrays of either)</span>
-</span><span data-line="17">    <span class="n">sender</span><span class="p">:</span> <span class="n">Person</span>
-</span><span data-line="18">    <span class="n">receivers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span>
-</span><span data-line="19">    <span class="c1"># NOTE: Define &quot;basic&quot; ABI types as strings</span>
-</span><span data-line="20">    <span class="n">ttl</span><span class="p">:</span> <span class="s2">&quot;uint256&quot;</span>
+</span><span data-line="16"><span class="c1"># All valid EIP712 Message Structs **must** subclass `EIP712Message`</span>
+</span><span data-line="17"><span class="k">class</span><span class="w"> </span><span class="nc">Mail</span><span class="p">(</span><span class="n">EIP712Message</span><span class="p">):</span>
+</span><span data-line="18">    <span class="c1">#  to define your EIP712 domain configuration</span>
+</span><span data-line="19">    <span class="n">eip712_domain</span> <span class="o">=</span> <span class="n">EIP712Domain</span><span class="p">(</span>
+</span><span data-line="20">        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ether Mail&quot;</span><span class="p">,</span>
+</span><span data-line="21">        <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+</span><span data-line="22">        <span class="n">verifyingContract</span><span class="o">=</span><span class="s2">&quot;0xDDdDddDdDdddDDddDDddDDDDdDdDDdDDdDDDDDDd&quot;</span><span class="p">,</span>
+</span><span data-line="23">        <span class="n">chainId</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span data-line="24">    <span class="p">)</span>
+</span><span data-line="25">
+</span><span data-line="26">    <span class="c1"># Struct fields (can be &quot;basic&quot; types, `BaseModel` types, or arrays of either)</span>
+</span><span data-line="27">    <span class="n">sender</span><span class="p">:</span> <span class="n">Person</span>
+</span><span data-line="28">    <span class="c1"># Dynamic array support is as easy as using `list` with the corresponding type</span>
+</span><span data-line="29">    <span class="n">receivers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Person</span><span class="p">]</span>
+</span><span data-line="30">    <span class="n">ttl</span><span class="p">:</span> <span class="n">abi</span><span class="o">.</span><span class="n">uint256</span>
 </span></pre></div>
 </div>
 <p>Then initialize these models:</p>
