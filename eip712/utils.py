@@ -14,6 +14,7 @@ SUPPORTED_NONABI_TYPES = {
     HexBytes: "bytes",
     bytes: "bytes",
     str: "string",
+    bool: "bool",
 }
 
 
