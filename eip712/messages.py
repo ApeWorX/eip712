@@ -4,7 +4,11 @@ Message classes for typed structured data hashing and signing in Ethereum.
 
 from typing import Any, ClassVar, get_args
 
-from eth_account.messages import SignableMessage, encode_typed_data
+from eth_account.messages import (
+    SignableMessage,
+    encode_typed_data,
+    hash_domain,
+)
 from eth_pydantic_types import HexBytes, abi
 from eth_utils.crypto import keccak
 from pydantic import BaseModel, ConfigDict, PrivateAttr, model_validator
@@ -43,6 +47,11 @@ class EIP712Domain(BaseModel):
             ]
         }
 
+    @property
+    def separator(self) -> str:
+        domain = _prepare_data_for_hashing(self.model_dump(exclude_none=True))
+        return HexBytes(hash_domain(domain))
+
 
 class EIP712Message(BaseModel):
     """
@@ -69,7 +78,7 @@ class EIP712Message(BaseModel):
     """
 
     eip712_domain: ClassVar[EIP712Domain | None] = None
-    """The default EIP712 to use for this model. Can be overriden on model init"""
+    """The default EIP712 to use for this model. Can be overridden on model init"""
 
     _eip712_domain_: EIP712Domain = PrivateAttr()
 
@@ -130,11 +139,19 @@ def extract_eip712_struct_message(msg: EIP712Message) -> dict:
     """The EIP-712 structured message to be used for serialization and hashing."""
 
     return {
-        "domain": msg._eip712_domain_.model_dump(exclude_none=True),
-        "types": {**msg._eip712_domain_.eip712_type, **build_eip712_type(msg.__class__)},
+        "domain": extract_eip712_domain(msg),
+        "types": extract_eip712_types(msg),
         "primaryType": msg.__class__.__name__,
         "message": msg.model_dump(),
     }
+
+
+def extract_eip712_domain(msg: EIP712Message) -> dict:
+    return msg._eip712_domain_.model_dump(exclude_none=True)
+
+
+def extract_eip712_types(msg: EIP712Message) -> dict:
+    return {**msg._eip712_domain_.eip712_type, **build_eip712_type(msg.__class__)}
 
 
 def calculate_hash(msg: SignableMessage) -> HexBytes:
@@ -152,3 +169,23 @@ def hash_message(msg: EIP712Message) -> HexBytes:
         HexBytes: 32 byte hash of the message, hashed according to EIP712
     """
     return calculate_hash(msg.signable_message)
+
+
+def _prepare_data_for_hashing(data: dict) -> dict:
+    result: dict = {}
+
+    for key, value in data.items():
+        item: Any = value
+        if isinstance(value, EIP712Type):
+            item = value.model_dump(exclude_none=True)
+        elif isinstance(value, dict):
+            item = _prepare_data_for_hashing(item)
+        elif isinstance(value, list):
+            elms = []
+            for elm in item:
+                if isinstance(elm, dict):
+                    elm = _prepare_data_for_hashing(elm)
+                elms.append(elm)
+            item = elms
+        result[key] = item
+    return result
