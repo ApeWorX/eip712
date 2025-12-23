@@ -48,7 +48,7 @@ class EIP712Domain(BaseModel):
         }
 
     @property
-    def separator(self) -> str:
+    def separator(self) -> HexBytes:
         domain = _prepare_data_for_hashing(self.model_dump(exclude_none=True))
         return HexBytes(hash_domain(domain))
 
@@ -176,7 +176,7 @@ def _prepare_data_for_hashing(data: dict) -> dict:
 
     for key, value in data.items():
         item: Any = value
-        if isinstance(value, EIP712Type):
+        if isinstance(value, BaseModel):
             item = value.model_dump(exclude_none=True)
         elif isinstance(value, dict):
             item = _prepare_data_for_hashing(item)
